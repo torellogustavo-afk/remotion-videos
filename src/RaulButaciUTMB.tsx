@@ -1,81 +1,17 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
 	AbsoluteFill,
 	Img,
 	Audio,
 	Sequence,
-	Easing,
 	interpolate,
 	useCurrentFrame,
 	useVideoConfig,
-	spring,
 	staticFile,
 } from 'remotion';
 
-const Title: React.FC<{ text: string; delay: number; duration: number }> = ({
-	text,
-	delay,
-	duration,
-}) => {
-	const frame = useCurrentFrame();
-	const { fps } = useVideoConfig();
-
-	const startFrame = delay * fps;
-	const endFrame = (delay + duration) * fps;
-	const progress = Math.max(0, Math.min(1, (frame - startFrame) / (10 * fps)));
-
-	return (
-		<Sequence from={startFrame} durationInFrames={duration * fps}>
-			<div
-				style={{
-					position: 'absolute',
-					width: '100%',
-					height: 'auto',
-					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'center',
-					alignItems: 'center',
-					textAlign: 'center',
-					opacity: progress < 1 ? progress : 1,
-					transform: `scale(${1 + (1 - progress) * 0.1})`,
-					zIndex: 20,
-					fontFamily: 'Arial, sans-serif',
-					fontWeight: 700,
-					color: '#FFFFFF',
-					textShadow: '0 4px 12px rgba(0,0,0,0.8)',
-					letterSpacing: '2px',
-				}}
-			>
-				{text}
-			</div>
-		</Sequence>
-	);
-};
-
-const PowerText: React.FC = () => {
-	return (
-		<div
-			style={{
-				fontSize: 96,
-				fontWeight: 900,
-				color: '#FFFFFF',
-				textShadow: '0 6px 20px rgba(0,0,0,0.9), 0 2px 4px rgba(255,140,0,0.4)',
-				textAlign: 'center',
-				letterSpacing: '3px',
-				lineHeight: 1.2,
-				textTransform: 'uppercase',
-				position: 'absolute',
-				zIndex: 25,
-			}}
-		>
-			CANDIDATO
-			<br />
-			AL PODIO
-		</div>
-	);
-};
-
-const KenBurnsImage: React.FC<{
+// Virtual camera shots - different encadrements of the same photo
+interface CameraShot {
 	startFrame: number;
 	durationFrames: number;
 	startScale: number;
@@ -84,27 +20,185 @@ const KenBurnsImage: React.FC<{
 	endX: number;
 	startY: number;
 	endY: number;
-}> = ({
-	startFrame,
-	durationFrames,
-	startScale,
-	endScale,
-	startX,
-	endX,
-	startY,
-	endY,
-}) => {
+	name: string;
+}
+
+const cameraShots: CameraShot[] = [
+	// 0-4s: Wide establishing shot with slow zoom
+	{
+		name: 'Wide establishing',
+		startFrame: 0,
+		durationFrames: 120,
+		startScale: 1,
+		endScale: 1.1,
+		startX: 0,
+		endX: -20,
+		startY: 0,
+		endY: -15,
+	},
+	// 4-8s: Slow transition to medium shot
+	{
+		name: 'Medium transition',
+		startFrame: 120,
+		durationFrames: 120,
+		startScale: 1.1,
+		endScale: 1.25,
+		startX: -20,
+		endX: -40,
+		startY: -15,
+		endY: -50,
+	},
+	// 8-15s: Close-up on face
+	{
+		name: 'Close face',
+		startFrame: 240,
+		durationFrames: 210,
+		startScale: 1.4,
+		endScale: 1.5,
+		startX: -60,
+		endX: -70,
+		startY: -100,
+		endY: -120,
+	},
+	// 15-22s: Pull back to medium
+	{
+		name: 'Medium pull back',
+		startFrame: 450,
+		durationFrames: 210,
+		startScale: 1.3,
+		endScale: 1.15,
+		startX: -50,
+		endX: -30,
+		startY: -60,
+		endY: -20,
+	},
+	// 22-29s: Vertical pan down
+	{
+		name: 'Vertical pan down',
+		startFrame: 660,
+		durationFrames: 210,
+		startScale: 1.2,
+		endScale: 1.3,
+		startX: -35,
+		endX: -40,
+		startY: 0,
+		endY: -80,
+	},
+	// 29-36s: Horizontal pan left with slight zoom
+	{
+		name: 'Horizontal pan left',
+		startFrame: 870,
+		durationFrames: 210,
+		startScale: 1.15,
+		endScale: 1.25,
+		startX: 0,
+		endX: -60,
+		startY: -30,
+		endY: -50,
+	},
+	// 36-43s: Wide angle with slow zoom
+	{
+		name: 'Wide zoom',
+		startFrame: 1080,
+		durationFrames: 210,
+		startScale: 1,
+		endScale: 1.2,
+		startX: -10,
+		endX: -30,
+		startY: 0,
+		endY: -40,
+	},
+	// 43-50s: Close focus on expression
+	{
+		name: 'Expression focus',
+		startFrame: 1290,
+		durationFrames: 210,
+		startScale: 1.35,
+		endScale: 1.45,
+		startX: -55,
+		endX: -65,
+		startY: -80,
+		endY: -110,
+	},
+	// 50-57s: Reset to medium-wide
+	{
+		name: 'Medium reset',
+		startFrame: 1500,
+		durationFrames: 210,
+		startScale: 1.2,
+		endScale: 1.15,
+		startX: -40,
+		endX: -25,
+		startY: -50,
+		endY: -15,
+	},
+	// 57-64s: Slow pan with gentle zoom
+	{
+		name: 'Gentle pan zoom',
+		startFrame: 1710,
+		durationFrames: 210,
+		startScale: 1.1,
+		endScale: 1.25,
+		startX: -15,
+		endX: -45,
+		startY: -20,
+		endY: -60,
+	},
+	// 64-71s: Body focus with slight zoom
+	{
+		name: 'Body shot',
+		startFrame: 1920,
+		durationFrames: 210,
+		startScale: 1.25,
+		endScale: 1.35,
+		startX: -35,
+		endX: -45,
+		startY: 10,
+		endY: -30,
+	},
+	// 71-78s: Full frame slow zoom
+	{
+		name: 'Full zoom out',
+		startFrame: 2130,
+		durationFrames: 210,
+		startScale: 1.3,
+		endScale: 1.2,
+		startX: -50,
+		endX: -35,
+		startY: -60,
+		endY: -25,
+	},
+	// 78-83s: Final emphasis close-up
+	{
+		name: 'Final close',
+		startFrame: 2340,
+		durationFrames: 150,
+		startScale: 1.4,
+		endScale: 1.45,
+		startX: -60,
+		endX: -65,
+		startY: -90,
+		endY: -105,
+	},
+];
+
+interface ImageLayerProps {
+	shot: CameraShot;
+}
+
+const ImageLayer: React.FC<ImageLayerProps> = ({shot}) => {
 	const frame = useCurrentFrame();
 
-	const isActive = frame >= startFrame && frame < startFrame + durationFrames;
-	const relativeFrame = Math.max(0, frame - startFrame);
-	const progress = Math.min(1, relativeFrame / durationFrames);
-
-	const currentScale = interpolate(progress, [0, 1], [startScale, endScale]);
-	const currentX = interpolate(progress, [0, 1], [startX, endX]);
-	const currentY = interpolate(progress, [0, 1], [startY, endY]);
-
+	// Check if this shot is active
+	const isActive = frame >= shot.startFrame && frame < shot.startFrame + shot.durationFrames;
 	if (!isActive) return null;
+
+	const relativeFrame = frame - shot.startFrame;
+	const progress = relativeFrame / shot.durationFrames;
+
+	const scale = interpolate(progress, [0, 1], [shot.startScale, shot.endScale]);
+	const translateX = interpolate(progress, [0, 1], [shot.startX, shot.endX]);
+	const translateY = interpolate(progress, [0, 1], [shot.startY, shot.endY]);
 
 	return (
 		<Img
@@ -113,168 +207,152 @@ const KenBurnsImage: React.FC<{
 				width: '100%',
 				height: '100%',
 				objectFit: 'cover',
-				transform: `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`,
+				transform: `scale(${scale}) translate(${translateX}px, ${translateY}px)`,
 			}}
 		/>
 	);
 };
 
-export const RaulButaciUTMB: React.FC = () => {
-	const { durationInFrames, fps, width, height } = useVideoConfig();
+const TextOverlay: React.FC<{text: string; startFrame: number; durationFrames: number; fontSize: number; color: string}> = ({
+	text,
+	startFrame,
+	durationFrames,
+	fontSize,
+	color,
+}) => {
+	const frame = useCurrentFrame();
+
+	const isActive = frame >= startFrame && frame < startFrame + durationFrames;
+	if (!isActive) return null;
+
+	const relativeFrame = frame - startFrame;
+	const fadeInFrames = 12; // 0.4s fade in
+	const fadeOutFrames = 6; // 0.2s fade out
+	const fadeOutStart = durationFrames - fadeOutFrames;
+
+	let opacity = 1;
+	if (relativeFrame < fadeInFrames) {
+		opacity = relativeFrame / fadeInFrames;
+	} else if (relativeFrame > fadeOutStart) {
+		opacity = (durationFrames - relativeFrame) / fadeOutFrames;
+	}
+
+	const scale = relativeFrame < fadeInFrames ? 0.95 + (relativeFrame / fadeInFrames) * 0.05 : 1;
 
 	return (
-		<AbsoluteFill style={{ backgroundColor: '#0A0A0A' }}>
-			{/* Background Image Layer with Ken Burns */}
-			<AbsoluteFill style={{ overflow: 'hidden' }}>
-				{/* Shot 1: Wide establishing with slow zoom (0:00-0:02) */}
-				<KenBurnsImage
-					startFrame={0}
-					durationFrames={60}
-					startScale={1}
-					endScale={1.15}
-					startX={0}
-					endX={-40}
-					startY={0}
-					endY={-30}
-				/>
+		<div
+			style={{
+				position: 'absolute',
+				width: '100%',
+				height: '100%',
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'center',
+				alignItems: 'center',
+				opacity,
+				transform: `scale(${scale})`,
+				zIndex: 30,
+				pointerEvents: 'none',
+			}}
+		>
+			<div
+				style={{
+					fontSize,
+					fontWeight: 900,
+					color,
+					textAlign: 'center',
+					textShadow: '0 4px 16px rgba(0,0,0,0.8)',
+					letterSpacing: '2px',
+					textTransform: 'uppercase',
+					lineHeight: 1.2,
+					maxWidth: '90%',
+				}}
+			>
+				{text}
+			</div>
+		</div>
+	);
+};
 
-				{/* Shot 2: Closer on face with slight pan (0:02-0:04) */}
-				<Sequence from={60} durationInFrames={120}>
-					<KenBurnsImage
-						startFrame={60}
-						durationFrames={60}
-						startScale={1.3}
-						endScale={1.5}
-						startX={-60}
-						endX={-80}
-						startY={-80}
-						endY={-120}
-					/>
-				</Sequence>
+export const RaulButaciUTMB: React.FC = () => {
+	const {fps} = useVideoConfig();
 
-				{/* Shot 3: Medium shot (0:04-0:06) */}
-				<Sequence from={120} durationInFrames={60}>
-					<KenBurnsImage
-						startFrame={120}
-						durationFrames={60}
-						startScale={1.1}
-						endScale={1.25}
-						startX={-20}
-						endX={-40}
-						startY={-20}
-						endY={-50}
-					/>
-				</Sequence>
+	// Total frames: 87 seconds @ 30fps = 2610 frames
+	const HOOK_START = 0;
+	const HOOK_END = 8 * fps; // 8 seconds for hook
+	const AUDIO_START = HOOK_END; // Frame 240
+	const AUDIO_DURATION = 75; // 75 seconds of audio
+	const AUDIO_END = AUDIO_START + AUDIO_DURATION * fps; // Frame 2490
+	const CTA_START = AUDIO_END; // Frame 2490
+	const CTA_DURATION = 4; // 4 seconds
+	const CTA_END = CTA_START + CTA_DURATION * fps; // Frame 2610
 
-				{/* Shot 4: Wide with downward pan (0:06-0:09) */}
-				<Sequence from={180} durationInFrames={90}>
-					<KenBurnsImage
-						startFrame={180}
-						durationFrames={90}
-						startScale={1}
-						endScale={1.2}
-						startX={0}
-						endX={30}
-						startY={0}
-						endY={-60}
-					/>
-				</Sequence>
+	return (
+		<AbsoluteFill style={{backgroundColor: '#0A0A0A'}}>
+			{/* Background Image Layer - Always visible with animated shots */}
+			<AbsoluteFill style={{overflow: 'hidden', position: 'relative'}}>
+				{cameraShots.map((shot, idx) => (
+					<ImageLayer key={idx} shot={shot} />
+				))}
 
 				{/* Dark overlay for text contrast */}
 				<AbsoluteFill
 					style={{
-						backgroundColor: 'rgba(0, 0, 0, 0.35)',
-						backdropFilter: 'blur(2px)',
+						backgroundColor: 'rgba(0, 0, 0, 0.4)',
+						backdropFilter: 'blur(1px)',
 					}}
 				/>
 			</AbsoluteFill>
 
-			{/* Text Layer */}
-			<AbsoluteFill
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'center',
-					alignItems: 'center',
-					padding: '40px',
-					zIndex: 20,
-				}}
-			>
-				{/* 0:00-0:02: RAÚL BUTACI */}
-				<Sequence from={0} durationInFrames={60}>
-					<div
-						style={{
-							fontSize: 72,
-							fontWeight: 900,
-							color: '#FFFFFF',
-							textAlign: 'center',
-							letterSpacing: '2px',
-							textTransform: 'uppercase',
-							textShadow: '0 4px 12px rgba(0,0,0,0.8)',
-							opacity: 1,
-							animation: 'fadeInScale 0.6s ease-out forwards',
-						}}
-					>
-						RAÚL BUTACI
-					</div>
-				</Sequence>
+			{/* Hook Text Layer (0-8 seconds) */}
+			<TextOverlay
+				text="RAÚL BUTACI"
+				startFrame={0}
+				durationFrames={60}
+				fontSize={72}
+				color="#FFFFFF"
+			/>
 
-				{/* 0:02-0:04: CANDIDATO AL PODIO (Power Text) */}
-				<Sequence from={60} durationInFrames={60}>
-					<PowerText />
-				</Sequence>
+			<TextOverlay
+				text="CANDIDATO AL PODIO"
+				startFrame={60}
+				durationFrames={60}
+				fontSize={96}
+				color="#FFFFFF"
+			/>
 
-				{/* 0:04-0:06: UTMB 2026 */}
-				<Sequence from={120} durationInFrames={60}>
-					<div
-						style={{
-							fontSize: 64,
-							fontWeight: 700,
-							color: '#FF8C00',
-							textAlign: 'center',
-							letterSpacing: '1px',
-							textShadow: '0 4px 12px rgba(0,0,0,0.8)',
-							textTransform: 'uppercase',
-						}}
-					>
-						UTMB 2026
-					</div>
-				</Sequence>
+			<TextOverlay
+				text="UTMB 2026"
+				startFrame={120}
+				durationFrames={60}
+				fontSize={64}
+				color="#FF8C00"
+			/>
 
-				{/* 0:06-0:09: EL AUDIO QUE ENVIÓ ANTES DE LA LARGADA */}
-				<Sequence from={180} durationInFrames={90}>
-					<div
-						style={{
-							fontSize: 36,
-							fontWeight: 600,
-							color: '#FFFFFF',
-							textAlign: 'center',
-							letterSpacing: '1px',
-							textShadow: '0 4px 12px rgba(0,0,0,0.8)',
-							lineHeight: 1.3,
-							maxWidth: '90%',
-						}}
-					>
-						EL AUDIO QUE ENVIÓ
-						<br />
-						ANTES DE LA LARGADA
-					</div>
-				</Sequence>
-			</AbsoluteFill>
+			<TextOverlay
+				text="EL AUDIO QUE ENVIÓ ANTES DE LA LARGADA"
+				startFrame={180}
+				durationFrames={60}
+				fontSize={36}
+				color="#FFFFFF"
+			/>
 
-			{/* Audio */}
-			<Audio src={staticFile('raul-butaci-audio-trimmed.ogg')} />
+			{/* Audio - Starts at frame 240 (8 seconds) */}
+			<Sequence from={AUDIO_START} durationInFrames={AUDIO_DURATION * fps}>
+				<Audio src={staticFile('raul-butaci-audio-body.ogg')} />
+			</Sequence>
 
-			{/* Closing Credits (Last 2 seconds) */}
-			<Sequence from={Math.max(0, durationInFrames - 60)} durationInFrames={60}>
+			{/* CTA Closing (83-87 seconds) */}
+			<Sequence from={CTA_START} durationInFrames={CTA_DURATION * fps}>
 				<AbsoluteFill
 					style={{
-						backgroundColor: 'rgba(0, 0, 0, 0.8)',
+						backgroundColor: 'rgba(0, 0, 0, 0.85)',
 						display: 'flex',
 						flexDirection: 'column',
 						justifyContent: 'center',
 						alignItems: 'center',
-						zIndex: 30,
+						zIndex: 40,
+						padding: '40px',
 					}}
 				>
 					<div
@@ -293,7 +371,7 @@ export const RaulButaciUTMB: React.FC = () => {
 					</div>
 					<div
 						style={{
-							fontSize: 52,
+							fontSize: 48,
 							fontWeight: 700,
 							color: '#FF8C00',
 							textAlign: 'center',
@@ -310,31 +388,25 @@ export const RaulButaciUTMB: React.FC = () => {
 							fontWeight: 600,
 							color: '#FFFFFF',
 							textAlign: 'center',
-							letterSpacing: '0.5px',
 							lineHeight: 1.4,
-							maxWidth: '90%',
+							marginBottom: 30,
 						}}
 					>
 						SEGUÍ SU CAMINO EN EL UTMB
-						<br />
-						<br />
+					</div>
+					<div
+						style={{
+							fontSize: 28,
+							fontWeight: 500,
+							color: '#FF8C00',
+							textAlign: 'center',
+							lineHeight: 1.3,
+						}}
+					>
 						SEGUINOS PARA SEGUIR LA CARRERA
 					</div>
 				</AbsoluteFill>
 			</Sequence>
-
-			<style>{`
-				@keyframes fadeInScale {
-					from {
-						opacity: 0;
-						transform: scale(0.8);
-					}
-					to {
-						opacity: 1;
-						transform: scale(1);
-					}
-				}
-			`}</style>
 		</AbsoluteFill>
 	);
 };
