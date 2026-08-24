@@ -1,0 +1,20 @@
+{
+  "name": "remotion-video",
+  "version": "1.0.0",
+  "description": "A Remotion video project",
+  "scripts": {
+    "start": "remotion preview src/index.tsx",
+    "build": "remotion render src/index.tsx output.mp4",
+    "build-still": "remotion still src/index.tsx still.png"
+  },
+  "dependencies": {
+    "remotion": "^4.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
