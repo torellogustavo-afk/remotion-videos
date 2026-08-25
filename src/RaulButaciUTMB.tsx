@@ -189,7 +189,7 @@ const ImageLayer: React.FC<ImageLayerProps> = ({shot}) => {
 	);
 };
 
-// Hook text components with premium sports aesthetic
+// Hook text components with cinematic sports aesthetic
 const HookNameTitle: React.FC = () => {
 	const frame = useCurrentFrame();
 	const fps = useVideoConfig().fps;
@@ -203,21 +203,22 @@ const HookNameTitle: React.FC = () => {
 	const relativeFrame = frame - hookStart;
 	const progress = relativeFrame / (hookEnd - hookStart);
 
-	// Spring entrance
+	// Aggressive spring entrance
 	const springValue = spring({
 		frame: relativeFrame,
 		fps,
 		config: {
-			damping: 8,
-			mass: 1,
-			stiffness: 100,
+			damping: 5,
+			mass: 0.5,
+			stiffness: 150,
 		},
 		durationInFrames: hookEnd - hookStart,
 	});
 
-	const opacity = interpolate(progress, [0, 0.3, 1], [0, 1, 1]);
-	const scale = interpolate(springValue, [0, 1], [0.8, 1]);
-	const yOffset = interpolate(springValue, [0, 1], [40, 0]);
+	const opacity = interpolate(progress, [0, 0.15, 1], [0, 1, 1]);
+	const scale = interpolate(springValue, [0, 1], [0.6, 1]);
+	const yOffset = interpolate(springValue, [0, 1], [60, 0]);
+	const rotationZ = interpolate(springValue, [0, 1], [3, 0]);
 
 	return (
 		<div
@@ -237,17 +238,18 @@ const HookNameTitle: React.FC = () => {
 		>
 			<div
 				style={{
-					transform: `scale(${scale}) translateY(${yOffset}px)`,
-					fontSize: 72,
-					fontWeight: 900,
+					transform: `scale(${scale}) translateY(${yOffset}px) rotateZ(${rotationZ}deg)`,
+					fontSize: 64,
+					fontWeight: 1000,
 					color: '#FFFFFF',
 					textAlign: 'center',
-					letterSpacing: '4px',
+					letterSpacing: '-2px',
 					textTransform: 'uppercase',
-					fontFamily: 'Arial, sans-serif',
-					textShadow: '0 6px 20px rgba(0,0,0,0.9)',
-					lineHeight: 1.1,
+					fontFamily: '"Arial Black", sans-serif',
+					textShadow: '0 8px 24px rgba(0,0,0,0.95), 0 2px 8px rgba(255,140,0,0.4)',
+					lineHeight: 1.05,
 					maxWidth: '90%',
+					fontStyle: 'normal',
 				}}
 			>
 				RAÚL<br />
@@ -261,9 +263,105 @@ const HookMainTitle: React.FC = () => {
 	const frame = useCurrentFrame();
 	const fps = useVideoConfig().fps;
 
-	// 0:01-0:02.8 - Protagonist text with zoom
+	// 0:01-0:02.5 - MASSIVE protagonist text
 	const startFrame = 30; // 1 second
-	const endFrame = 84; // 2.8 seconds
+	const endFrame = 75; // 2.5 seconds
+	const durationFrames = endFrame - startFrame;
+
+	if (frame < startFrame || frame >= endFrame) return null;
+
+	const relativeFrame = frame - startFrame;
+	const progress = relativeFrame / durationFrames;
+
+	// Ultra-aggressive spring
+	const springValue = spring({
+		frame: relativeFrame,
+		fps,
+		config: {
+			damping: 3,
+			mass: 0.4,
+			stiffness: 200,
+		},
+		durationInFrames: durationFrames,
+	});
+
+	const opacity = interpolate(progress, [0, 0.15, 0.95, 1], [0, 1, 1, 1]);
+	const scale = interpolate(springValue, [0, 1], [1.4, 1]);
+	const yOffset = interpolate(springValue, [0, 1], [50, 0]);
+	const rotationZ = interpolate(springValue, [0, 1], [-2, 0]);
+
+	// Flash effect on entrance
+	const flashOpacity = interpolate(progress, [0, 0.1, 0.2], [0.8, 0.4, 0]);
+
+	return (
+		<>
+			{/* Flash effect */}
+			<AbsoluteFill
+				style={{
+					backgroundColor: 'rgba(255, 255, 255, 0.3)',
+					opacity: flashOpacity,
+					pointerEvents: 'none',
+					zIndex: 21,
+				}}
+			/>
+
+			{/* Main text */}
+			<div
+				style={{
+					position: 'absolute',
+					top: 0,
+					left: 0,
+					width: '100%',
+					height: '100%',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					opacity,
+					pointerEvents: 'none',
+					zIndex: 22,
+				}}
+			>
+				<div
+					style={{
+						transform: `scale(${scale}) translateY(${yOffset}px) rotateZ(${rotationZ}deg)`,
+						fontSize: 160,
+						fontWeight: 1000,
+						color: '#FFFFFF',
+						textAlign: 'center',
+						letterSpacing: '-3px',
+						textTransform: 'uppercase',
+						fontFamily: '"Arial Black", sans-serif',
+						textShadow: '0 12px 32px rgba(0,0,0,0.97), 0 4px 12px rgba(255,140,0,0.6)',
+						lineHeight: 0.95,
+						maxWidth: '95%',
+						fontStyle: 'normal',
+					}}
+				>
+					CANDIDATO<br />
+					<span
+						style={{
+							color: '#FF8C00',
+							display: 'block',
+							borderBottom: '4px solid #FF8C00',
+							paddingBottom: '12px',
+							marginTop: '-8px',
+						}}
+					>
+						AL PODIO
+					</span>
+				</div>
+			</div>
+		</>
+	);
+};
+
+const HookBadge: React.FC = () => {
+	const frame = useCurrentFrame();
+	const fps = useVideoConfig().fps;
+
+	// 0:02.5-0:03.3 - Orange badge
+	const startFrame = 75;
+	const endFrame = 99;
 	const durationFrames = endFrame - startFrame;
 
 	if (frame < startFrame || frame >= endFrame) return null;
@@ -275,105 +373,41 @@ const HookMainTitle: React.FC = () => {
 		frame: relativeFrame,
 		fps,
 		config: {
-			damping: 6,
-			mass: 1,
-			stiffness: 120,
+			damping: 4,
+			mass: 0.6,
+			stiffness: 180,
 		},
 		durationInFrames: durationFrames,
 	});
 
-	const opacity = interpolate(progress, [0, 0.2, 1], [0, 1, 1]);
-	const scale = interpolate(springValue, [0, 1], [1.2, 1]);
-	const yOffset = interpolate(springValue, [0, 1], [20, 0]);
+	const opacity = interpolate(progress, [0, 0.15, 0.8, 1], [0, 1, 1, 0]);
+	const scale = interpolate(springValue, [0, 1], [1.5, 1]);
+	const yOffset = interpolate(springValue, [0, 1], [40, 0]);
 
 	return (
 		<div
 			style={{
 				position: 'absolute',
-				top: 0,
-				left: 0,
-				width: '100%',
-				height: '100%',
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center',
-				opacity,
-				pointerEvents: 'none',
-				zIndex: 21,
-			}}
-		>
-			<div
-				style={{
-					transform: `scale(${scale}) translateY(${yOffset}px)`,
-					fontSize: 96,
-					fontWeight: 900,
-					color: '#FFFFFF',
-					textAlign: 'center',
-					letterSpacing: '2px',
-					textTransform: 'uppercase',
-					fontFamily: 'Arial, sans-serif',
-					textShadow: '0 8px 24px rgba(0,0,0,0.95)',
-					lineHeight: 1.15,
-					maxWidth: '90%',
-				}}
-			>
-				CANDIDATO<br />
-				<span
-					style={{
-						color: '#FF8C00',
-						display: 'block',
-						textDecoration: 'underline',
-						textDecorationColor: '#FF8C00',
-						textDecorationThickness: '3px',
-						textUnderlineOffset: '8px',
-					}}
-				>
-					AL PODIO
-				</span>
-			</div>
-		</div>
-	);
-};
-
-const HookBadge: React.FC = () => {
-	const frame = useCurrentFrame();
-
-	// 0:02.8-0:03.8 - Orange badge
-	const startFrame = 84;
-	const endFrame = 114;
-
-	if (frame < startFrame || frame >= endFrame) return null;
-
-	const relativeFrame = frame - startFrame;
-	const progress = relativeFrame / (endFrame - startFrame);
-
-	const opacity = interpolate(progress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-	const scale = interpolate(progress, [0, 0.3, 1], [1.3, 1, 1]);
-
-	return (
-		<div
-			style={{
-				position: 'absolute',
-				bottom: '35%',
+				bottom: '30%',
 				left: '50%',
-				transform: `translate(-50%, 50%) scale(${scale})`,
+				transform: `translate(-50%, 50%) scale(${scale}) translateY(${yOffset}px)`,
 				opacity,
 				pointerEvents: 'none',
-				zIndex: 22,
+				zIndex: 23,
 			}}
 		>
 			<div
 				style={{
 					backgroundColor: '#FF8C00',
-					padding: '12px 24px',
-					borderRadius: '8px',
-					fontSize: 36,
-					fontWeight: 900,
+					padding: '16px 32px',
+					borderRadius: '4px',
+					fontSize: 40,
+					fontWeight: 1000,
 					color: '#FFFFFF',
-					letterSpacing: '2px',
+					letterSpacing: '1px',
 					textTransform: 'uppercase',
-					textShadow: '0 4px 12px rgba(0,0,0,0.5)',
-					fontFamily: 'Arial, sans-serif',
+					textShadow: '0 6px 16px rgba(0,0,0,0.7)',
+					fontFamily: '"Arial Black", sans-serif',
 				}}
 			>
 				UTMB 2026
@@ -384,10 +418,11 @@ const HookBadge: React.FC = () => {
 
 const HookAudioIntro: React.FC = () => {
 	const frame = useCurrentFrame();
+	const fps = useVideoConfig().fps;
 
-	// 0:03.8-0:05.5 - Audio intro text
-	const startFrame = 114;
-	const endFrame = 165;
+	// 0:03.3-0:05.0 - Audio intro text (50 frames duration)
+	const startFrame = 99;
+	const endFrame = 150;
 	const durationFrames = endFrame - startFrame;
 
 	if (frame < startFrame || frame >= endFrame) return null;
@@ -395,8 +430,20 @@ const HookAudioIntro: React.FC = () => {
 	const relativeFrame = frame - startFrame;
 	const progress = relativeFrame / durationFrames;
 
+	const springValue = spring({
+		frame: relativeFrame,
+		fps,
+		config: {
+			damping: 5,
+			mass: 0.8,
+			stiffness: 140,
+		},
+		durationInFrames: durationFrames,
+	});
+
 	const opacity = interpolate(progress, [0, 0.2, 0.85, 1], [0, 1, 1, 0]);
-	const yOffset = interpolate(progress, [0, 0.3, 1], [20, 0, 0]);
+	const yOffset = interpolate(springValue, [0, 1], [30, 0]);
+	const scale = interpolate(springValue, [0, 1], [0.95, 1]);
 
 	return (
 		<div
@@ -410,53 +457,60 @@ const HookAudioIntro: React.FC = () => {
 				flexDirection: 'column',
 				alignItems: 'center',
 				justifyContent: 'flex-end',
-				paddingBottom: '25%',
+				paddingBottom: '28%',
 				opacity,
 				pointerEvents: 'none',
-				zIndex: 23,
+				zIndex: 24,
 			}}
 		>
 			<div
 				style={{
-					transform: `translateY(${yOffset}px)`,
-					fontSize: 32,
-					fontWeight: 700,
+					transform: `scale(${scale}) translateY(${yOffset}px)`,
+					fontSize: 36,
+					fontWeight: 800,
 					color: '#FFFFFF',
 					textAlign: 'center',
-					letterSpacing: '1px',
+					letterSpacing: '0px',
 					textTransform: 'uppercase',
-					fontFamily: 'Arial, sans-serif',
-					textShadow: '0 4px 16px rgba(0,0,0,0.8)',
+					fontFamily: '"Arial Black", sans-serif',
+					textShadow: '0 6px 20px rgba(0,0,0,0.85)',
 					maxWidth: '85%',
-					lineHeight: 1.3,
-					marginBottom: 20,
+					lineHeight: 1.25,
+					marginBottom: 24,
 				}}
 			>
 				EL AUDIO QUE ENVIÓ<br />
 				ANTES DE LA LARGADA
 			</div>
 
-			{/* Waveform visualization */}
+			{/* Animated waveform */}
 			<div
 				style={{
 					display: 'flex',
-					alignItems: 'flex-end',
-					gap: '3px',
-					height: '40px',
+					alignItems: 'center',
 					justifyContent: 'center',
+					gap: '5px',
+					height: '50px',
 				}}
 			>
-				{[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
-					const barHeight = interpolate(progress, [0.3, 0.6, 1], [20, 40, 20]) * (0.6 + (i % 3) * 0.2);
+				{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
+					const delay = i * 3;
+					const waveProgress = (progress * 60 - delay) / 20;
+					const barHeight = interpolate(
+						Math.max(0, Math.min(1, waveProgress)),
+						[0, 0.5, 1],
+						[8, 35, 8]
+					) * (0.7 + (i % 2) * 0.3);
+
 					return (
 						<div
 							key={i}
 							style={{
-								width: '3px',
+								width: '4px',
 								height: `${Math.max(8, barHeight)}px`,
 								backgroundColor: '#FF8C00',
 								borderRadius: '2px',
-								opacity: 0.7,
+								opacity: 0.8,
 							}}
 						/>
 					);
