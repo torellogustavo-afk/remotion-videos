@@ -1,0 +1,7 @@
+{
+  "crf": 18,
+  "concurrency": 1,
+  "ffmpegExecutable": null,
+  "openBrowserDevTools": false,
+  "logLevel": "verbose"
+}
