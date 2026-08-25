@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique de Gestión Patrimonial - Video Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Background glows */
+        .glow-1 {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            filter: blur(60px);
+        }
+
+        .glow-2 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -150px;
+            left: -150px;
+            filter: blur(50px);
+        }
+
+        /* Title Section */
+        .title-section {
+            position: absolute;
+            top: 15%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            animation: fadeInDown 1s ease-out;
+            z-index: 10;
+        }
+
+        .title-main {
+            font-size: 72px;
+            font-weight: 700;
+            margin: 0;
+            color: #fbbf24;
+            text-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .title-sub {
+            font-size: 64px;
+            font-weight: 600;
+            margin: 10px 0 0 0;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        /* Subtitle Section */
+        .subtitle-section {
+            position: absolute;
+            top: 35%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out 0.3s backwards;
+        }
+
+        .subtitle-text {
+            font-size: 28px;
+            color: #e2e8f0;
+            margin: 0 0 15px 0;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .divider {
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+            margin: 15px auto;
+        }
+
+        /* Features Section */
+        .features {
+            position: absolute;
+            top: 55%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding: 0 5%;
+            gap: 20px;
+            animation: fadeIn 0.8s ease-out 0.6s backwards;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            padding: 30px;
+            border-radius: 12px;
+            width: 30%;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            animation: slideInUp 0.6s ease-out 0.7s backwards;
+        }
+
+        .feature-card:nth-child(1) {
+            animation-delay: 0.7s;
+            animation-name: slideInLeft;
+        }
+
+        .feature-card:nth-child(2) {
+            animation-delay: 0.8s;
+            animation-name: slideInRight;
+        }
+
+        .feature-card:nth-child(3) {
+            animation-delay: 0.9s;
+            animation-name: slideInUp;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            color: #fbbf24;
+            font-size: 20px;
+            margin: 0 0 10px 0;
+            font-weight: 600;
+        }
+
+        .feature-text {
+            color: #cbd5e1;
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            position: absolute;
+            bottom: 8%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            animation: scaleIn 0.8s ease-out 1.2s backwards;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-radius: 50px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(251, 191, 36, 0.3);
+        }
+
+        .cta-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            color: #0f172a;
+            letter-spacing: 1px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: #94a3b8;
+            margin: 15px 0 0 0;
+        }
+
+        /* Bottom accent */
+        .bottom-accent {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        button {
+            background: #fbbf24;
+            color: #0f172a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.3);
+        }
+
+        .info-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            color: #e2e8f0;
+            max-width: 300px;
+            font-size: 12px;
+            line-height: 1.6;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-title {
+            color: #fbbf24;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="playAnimation()">▶ Play</button>
+        <button onclick="resetAnimation()">↻ Reset</button>
+    </div>
+
+    <div class="video-container" id="videoContainer">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+
+        <!-- Title -->
+        <div class="title-section">
+            <h1 class="title-main">BOUTIQUE DE</h1>
+            <h2 class="title-sub">GESTIÓN PATRIMONIAL</h2>
+        </div>
+
+        <!-- Subtitle -->
+        <div class="subtitle-section">
+            <p class="subtitle-text">Inversiones • Consultoría Técnica</p>
+            <div class="divider"></div>
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">💼</div>
+                <h3 class="feature-title">Gestión de Patrimonio</h3>
+                <p class="feature-text">Asesoramiento integral en la administración y maximización de tu patrimonio</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">Inversiones Estratégicas</h3>
+                <p class="feature-text">Oportunidades de inversión seleccionadas con análisis técnico profundo</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Consultoría Técnica</h3>
+                <p class="feature-text">Análisis experto y asesoría personalizada para decisiones financieras seguras</p>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <div class="cta-button">
+                <p class="cta-text">LOS ÚNICOS EN LA PAMPA</p>
+            </div>
+            <p class="cta-subtitle">Servicios Premium de Gestión Patrimonial e Inversiones</p>
+        </div>
+
+        <!-- Bottom accent -->
+        <div class="bottom-accent"></div>
+    </div>
+
+    <div class="info-panel">
+        <div class="info-title">📹 Video Premium</div>
+        <p>Resolución: 1920x1080 (Full HD)</p>
+        <p>Duración: 10 segundos</p>
+        <p>FPS: 30</p>
+        <p>Formato: MP4 H.264</p>
+        <br>
+        <p><strong>Los únicos en La Pampa</strong> ofreciendo servicios premium de gestión patrimonial e inversiones</p>
+    </div>
+
+    <script>
+        function playAnimation() {
+            const container = document.getElementById('videoContainer');
+            container.style.animation = 'none';
+            setTimeout(() => {
+                container.style.animation = 'fadeIn 0.2s ease';
+            }, 10);
+        }
+
+        function resetAnimation() {
+            const container = document.getElementById('videoContainer');
+            const elements = container.querySelectorAll('[style*="animation"]');
+            elements.forEach(el => {
+                el.style.animation = 'none';
+                setTimeout(() => {
+                    el.style.animation = '';
+                }, 10);
+            });
+            location.reload();
+        }
+    </script>
+</body>
+</html>

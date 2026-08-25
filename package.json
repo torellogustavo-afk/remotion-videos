@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "A Remotion video project",
   "scripts": {
-    "start": "remotion preview src/index.tsx",
-    "build": "remotion render src/index.tsx output.mp4",
-    "build-still": "remotion still src/index.tsx still.png"
+    "start": "npx remotion preview src/index.tsx",
+    "build": "npx remotion render src/index.tsx output.mp4",
+    "build-still": "npx remotion still src/index.tsx still.png"
   },
   "dependencies": {
     "react": "^18.0.0",
