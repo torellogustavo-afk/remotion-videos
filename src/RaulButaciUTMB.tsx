@@ -8,9 +8,9 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 	staticFile,
+	spring,
 } from 'remotion';
 
-// Virtual camera shots - different encadrements of the same photo
 interface CameraShot {
 	startFrame: number;
 	durationFrames: number;
@@ -24,161 +24,138 @@ interface CameraShot {
 }
 
 const cameraShots: CameraShot[] = [
-	// 0-4s: Wide establishing shot with slow zoom
+	// Audio body shots (5.5s onwards)
 	{
-		name: 'Wide establishing',
-		startFrame: 0,
-		durationFrames: 120,
-		startScale: 1,
-		endScale: 1.1,
-		startX: 0,
-		endX: -20,
-		startY: 0,
-		endY: -15,
+		name: 'Audio body 1',
+		startFrame: 165,
+		durationFrames: 180,
+		startScale: 1.6,
+		endScale: 1.65,
+		startX: -80,
+		endX: -85,
+		startY: -90,
+		endY: -95,
 	},
-	// 4-8s: Slow transition to medium shot
 	{
-		name: 'Medium transition',
-		startFrame: 120,
-		durationFrames: 120,
-		startScale: 1.1,
-		endScale: 1.25,
-		startX: -20,
-		endX: -40,
-		startY: -15,
-		endY: -50,
-	},
-	// 8-15s: Close-up on face
-	{
-		name: 'Close face',
-		startFrame: 240,
-		durationFrames: 210,
-		startScale: 1.4,
+		name: 'Audio body 2',
+		startFrame: 345,
+		durationFrames: 180,
+		startScale: 1.55,
 		endScale: 1.5,
+		startX: -75,
+		endX: -65,
+		startY: -85,
+		endY: -75,
+	},
+	{
+		name: 'Audio body 3',
+		startFrame: 525,
+		durationFrames: 210,
+		startScale: 1.45,
+		endScale: 1.55,
 		startX: -60,
 		endX: -70,
-		startY: -100,
-		endY: -120,
-	},
-	// 15-22s: Pull back to medium
-	{
-		name: 'Medium pull back',
-		startFrame: 450,
-		durationFrames: 210,
-		startScale: 1.3,
-		endScale: 1.15,
-		startX: -50,
-		endX: -30,
-		startY: -60,
-		endY: -20,
-	},
-	// 22-29s: Vertical pan down
-	{
-		name: 'Vertical pan down',
-		startFrame: 660,
-		durationFrames: 210,
-		startScale: 1.2,
-		endScale: 1.3,
-		startX: -35,
-		endX: -40,
-		startY: 0,
+		startY: -70,
 		endY: -80,
 	},
-	// 29-36s: Horizontal pan left with slight zoom
 	{
-		name: 'Horizontal pan left',
-		startFrame: 870,
+		name: 'Audio body 4',
+		startFrame: 735,
 		durationFrames: 210,
-		startScale: 1.15,
-		endScale: 1.25,
-		startX: 0,
-		endX: -60,
-		startY: -30,
-		endY: -50,
-	},
-	// 36-43s: Wide angle with slow zoom
-	{
-		name: 'Wide zoom',
-		startFrame: 1080,
-		durationFrames: 210,
-		startScale: 1,
-		endScale: 1.2,
-		startX: -10,
-		endX: -30,
-		startY: 0,
-		endY: -40,
-	},
-	// 43-50s: Close focus on expression
-	{
-		name: 'Expression focus',
-		startFrame: 1290,
-		durationFrames: 210,
-		startScale: 1.35,
-		endScale: 1.45,
-		startX: -55,
-		endX: -65,
+		startScale: 1.5,
+		endScale: 1.6,
+		startX: -70,
+		endX: -80,
 		startY: -80,
-		endY: -110,
+		endY: -90,
 	},
-	// 50-57s: Reset to medium-wide
 	{
-		name: 'Medium reset',
-		startFrame: 1500,
+		name: 'Audio body 5',
+		startFrame: 945,
 		durationFrames: 210,
-		startScale: 1.2,
-		endScale: 1.15,
-		startX: -40,
-		endX: -25,
-		startY: -50,
-		endY: -15,
+		startScale: 1.65,
+		endScale: 1.55,
+		startX: -85,
+		endX: -70,
+		startY: -95,
+		endY: -80,
 	},
-	// 57-64s: Slow pan with gentle zoom
 	{
-		name: 'Gentle pan zoom',
-		startFrame: 1710,
+		name: 'Audio body 6',
+		startFrame: 1155,
 		durationFrames: 210,
-		startScale: 1.1,
-		endScale: 1.25,
-		startX: -15,
-		endX: -45,
-		startY: -20,
-		endY: -60,
+		startScale: 1.5,
+		endScale: 1.65,
+		startX: -65,
+		endX: -80,
+		startY: -75,
+		endY: -90,
 	},
-	// 64-71s: Body focus with slight zoom
 	{
-		name: 'Body shot',
-		startFrame: 1920,
+		name: 'Audio body 7',
+		startFrame: 1365,
 		durationFrames: 210,
-		startScale: 1.25,
-		endScale: 1.35,
-		startX: -35,
-		endX: -45,
-		startY: 10,
-		endY: -30,
-	},
-	// 71-78s: Full frame slow zoom
-	{
-		name: 'Full zoom out',
-		startFrame: 2130,
-		durationFrames: 210,
-		startScale: 1.3,
-		endScale: 1.2,
-		startX: -50,
-		endX: -35,
-		startY: -60,
-		endY: -25,
-	},
-	// 78-83s: Final emphasis close-up
-	{
-		name: 'Final close',
-		startFrame: 2340,
-		durationFrames: 150,
-		startScale: 1.4,
-		endScale: 1.45,
-		startX: -60,
+		startScale: 1.6,
+		endScale: 1.5,
+		startX: -80,
 		endX: -65,
 		startY: -90,
-		endY: -105,
+		endY: -75,
+	},
+	{
+		name: 'Audio body 8',
+		startFrame: 1575,
+		durationFrames: 210,
+		startScale: 1.55,
+		endScale: 1.65,
+		startX: -70,
+		endX: -85,
+		startY: -80,
+		endY: -95,
+	},
+	{
+		name: 'Audio body 9',
+		startFrame: 1785,
+		durationFrames: 210,
+		startScale: 1.65,
+		endScale: 1.55,
+		startX: -85,
+		endX: -75,
+		startY: -95,
+		endY: -85,
+	},
+	{
+		name: 'Audio body 10',
+		startFrame: 1995,
+		durationFrames: 210,
+		startScale: 1.6,
+		endScale: 1.5,
+		startX: -80,
+		endX: -65,
+		startY: -90,
+		endY: -75,
+	},
+	{
+		name: 'Audio body 11',
+		startFrame: 2205,
+		durationFrames: 180,
+		startScale: 1.5,
+		endScale: 1.55,
+		startX: -65,
+		endX: -70,
+		startY: -75,
+		endY: -80,
+	},
+	{
+		name: 'Audio body 12',
+		startFrame: 2385,
+		durationFrames: 120,
+		startScale: 1.55,
+		endScale: 1.6,
+		startX: -70,
+		endX: -80,
+		startY: -80,
+		endY: -90,
 	},
 ];
 
@@ -189,7 +166,6 @@ interface ImageLayerProps {
 const ImageLayer: React.FC<ImageLayerProps> = ({shot}) => {
 	const frame = useCurrentFrame();
 
-	// Check if this shot is active
 	const isActive = frame >= shot.startFrame && frame < shot.startFrame + shot.durationFrames;
 	if (!isActive) return null;
 
@@ -213,62 +189,278 @@ const ImageLayer: React.FC<ImageLayerProps> = ({shot}) => {
 	);
 };
 
-const TextOverlay: React.FC<{text: string; startFrame: number; durationFrames: number; fontSize: number; color: string}> = ({
-	text,
-	startFrame,
-	durationFrames,
-	fontSize,
-	color,
-}) => {
+// Hook text components with premium sports aesthetic
+const HookNameTitle: React.FC = () => {
 	const frame = useCurrentFrame();
+	const fps = useVideoConfig().fps;
 
-	const isActive = frame >= startFrame && frame < startFrame + durationFrames;
-	if (!isActive) return null;
+	// 0:00-0:01 - Entry animation
+	const hookStart = 0;
+	const hookEnd = 30; // 1 second
 
-	const relativeFrame = frame - startFrame;
-	const fadeInFrames = 12; // 0.4s fade in
-	const fadeOutFrames = 6; // 0.2s fade out
-	const fadeOutStart = durationFrames - fadeOutFrames;
+	if (frame < hookStart || frame >= hookEnd) return null;
 
-	let opacity = 1;
-	if (relativeFrame < fadeInFrames) {
-		opacity = relativeFrame / fadeInFrames;
-	} else if (relativeFrame > fadeOutStart) {
-		opacity = (durationFrames - relativeFrame) / fadeOutFrames;
-	}
+	const relativeFrame = frame - hookStart;
+	const progress = relativeFrame / (hookEnd - hookStart);
 
-	const scale = relativeFrame < fadeInFrames ? 0.95 + (relativeFrame / fadeInFrames) * 0.05 : 1;
+	// Spring entrance
+	const springValue = spring({
+		frame: relativeFrame,
+		fps,
+		config: {
+			damping: 8,
+			mass: 1,
+			stiffness: 100,
+		},
+		durationInFrames: hookEnd - hookStart,
+	});
+
+	const opacity = interpolate(progress, [0, 0.3, 1], [0, 1, 1]);
+	const scale = interpolate(springValue, [0, 1], [0.8, 1]);
+	const yOffset = interpolate(springValue, [0, 1], [40, 0]);
 
 	return (
 		<div
 			style={{
 				position: 'absolute',
+				top: 0,
+				left: 0,
 				width: '100%',
 				height: '100%',
 				display: 'flex',
-				flexDirection: 'column',
-				justifyContent: 'center',
 				alignItems: 'center',
+				justifyContent: 'center',
 				opacity,
-				transform: `scale(${scale})`,
-				zIndex: 30,
 				pointerEvents: 'none',
+				zIndex: 20,
 			}}
 		>
 			<div
 				style={{
-					fontSize,
+					transform: `scale(${scale}) translateY(${yOffset}px)`,
+					fontSize: 72,
 					fontWeight: 900,
-					color,
+					color: '#FFFFFF',
 					textAlign: 'center',
-					textShadow: '0 4px 16px rgba(0,0,0,0.8)',
-					letterSpacing: '2px',
+					letterSpacing: '4px',
 					textTransform: 'uppercase',
-					lineHeight: 1.2,
+					fontFamily: 'Arial, sans-serif',
+					textShadow: '0 6px 20px rgba(0,0,0,0.9)',
+					lineHeight: 1.1,
 					maxWidth: '90%',
 				}}
 			>
-				{text}
+				RAÚL<br />
+				BUTACI
+			</div>
+		</div>
+	);
+};
+
+const HookMainTitle: React.FC = () => {
+	const frame = useCurrentFrame();
+	const fps = useVideoConfig().fps;
+
+	// 0:01-0:02.8 - Protagonist text with zoom
+	const startFrame = 30; // 1 second
+	const endFrame = 84; // 2.8 seconds
+	const durationFrames = endFrame - startFrame;
+
+	if (frame < startFrame || frame >= endFrame) return null;
+
+	const relativeFrame = frame - startFrame;
+	const progress = relativeFrame / durationFrames;
+
+	const springValue = spring({
+		frame: relativeFrame,
+		fps,
+		config: {
+			damping: 6,
+			mass: 1,
+			stiffness: 120,
+		},
+		durationInFrames: durationFrames,
+	});
+
+	const opacity = interpolate(progress, [0, 0.2, 1], [0, 1, 1]);
+	const scale = interpolate(springValue, [0, 1], [1.2, 1]);
+	const yOffset = interpolate(springValue, [0, 1], [20, 0]);
+
+	return (
+		<div
+			style={{
+				position: 'absolute',
+				top: 0,
+				left: 0,
+				width: '100%',
+				height: '100%',
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'center',
+				opacity,
+				pointerEvents: 'none',
+				zIndex: 21,
+			}}
+		>
+			<div
+				style={{
+					transform: `scale(${scale}) translateY(${yOffset}px)`,
+					fontSize: 96,
+					fontWeight: 900,
+					color: '#FFFFFF',
+					textAlign: 'center',
+					letterSpacing: '2px',
+					textTransform: 'uppercase',
+					fontFamily: 'Arial, sans-serif',
+					textShadow: '0 8px 24px rgba(0,0,0,0.95)',
+					lineHeight: 1.15,
+					maxWidth: '90%',
+				}}
+			>
+				CANDIDATO<br />
+				<span
+					style={{
+						color: '#FF8C00',
+						display: 'block',
+						textDecoration: 'underline',
+						textDecorationColor: '#FF8C00',
+						textDecorationThickness: '3px',
+						textUnderlineOffset: '8px',
+					}}
+				>
+					AL PODIO
+				</span>
+			</div>
+		</div>
+	);
+};
+
+const HookBadge: React.FC = () => {
+	const frame = useCurrentFrame();
+
+	// 0:02.8-0:03.8 - Orange badge
+	const startFrame = 84;
+	const endFrame = 114;
+
+	if (frame < startFrame || frame >= endFrame) return null;
+
+	const relativeFrame = frame - startFrame;
+	const progress = relativeFrame / (endFrame - startFrame);
+
+	const opacity = interpolate(progress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+	const scale = interpolate(progress, [0, 0.3, 1], [1.3, 1, 1]);
+
+	return (
+		<div
+			style={{
+				position: 'absolute',
+				bottom: '35%',
+				left: '50%',
+				transform: `translate(-50%, 50%) scale(${scale})`,
+				opacity,
+				pointerEvents: 'none',
+				zIndex: 22,
+			}}
+		>
+			<div
+				style={{
+					backgroundColor: '#FF8C00',
+					padding: '12px 24px',
+					borderRadius: '8px',
+					fontSize: 36,
+					fontWeight: 900,
+					color: '#FFFFFF',
+					letterSpacing: '2px',
+					textTransform: 'uppercase',
+					textShadow: '0 4px 12px rgba(0,0,0,0.5)',
+					fontFamily: 'Arial, sans-serif',
+				}}
+			>
+				UTMB 2026
+			</div>
+		</div>
+	);
+};
+
+const HookAudioIntro: React.FC = () => {
+	const frame = useCurrentFrame();
+
+	// 0:03.8-0:05.5 - Audio intro text
+	const startFrame = 114;
+	const endFrame = 165;
+	const durationFrames = endFrame - startFrame;
+
+	if (frame < startFrame || frame >= endFrame) return null;
+
+	const relativeFrame = frame - startFrame;
+	const progress = relativeFrame / durationFrames;
+
+	const opacity = interpolate(progress, [0, 0.2, 0.85, 1], [0, 1, 1, 0]);
+	const yOffset = interpolate(progress, [0, 0.3, 1], [20, 0, 0]);
+
+	return (
+		<div
+			style={{
+				position: 'absolute',
+				top: 0,
+				left: 0,
+				width: '100%',
+				height: '100%',
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+				justifyContent: 'flex-end',
+				paddingBottom: '25%',
+				opacity,
+				pointerEvents: 'none',
+				zIndex: 23,
+			}}
+		>
+			<div
+				style={{
+					transform: `translateY(${yOffset}px)`,
+					fontSize: 32,
+					fontWeight: 700,
+					color: '#FFFFFF',
+					textAlign: 'center',
+					letterSpacing: '1px',
+					textTransform: 'uppercase',
+					fontFamily: 'Arial, sans-serif',
+					textShadow: '0 4px 16px rgba(0,0,0,0.8)',
+					maxWidth: '85%',
+					lineHeight: 1.3,
+					marginBottom: 20,
+				}}
+			>
+				EL AUDIO QUE ENVIÓ<br />
+				ANTES DE LA LARGADA
+			</div>
+
+			{/* Waveform visualization */}
+			<div
+				style={{
+					display: 'flex',
+					alignItems: 'flex-end',
+					gap: '3px',
+					height: '40px',
+					justifyContent: 'center',
+				}}
+			>
+				{[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+					const barHeight = interpolate(progress, [0.3, 0.6, 1], [20, 40, 20]) * (0.6 + (i % 3) * 0.2);
+					return (
+						<div
+							key={i}
+							style={{
+								width: '3px',
+								height: `${Math.max(8, barHeight)}px`,
+								backgroundColor: '#FF8C00',
+								borderRadius: '2px',
+								opacity: 0.7,
+							}}
+						/>
+					);
+				})}
 			</div>
 		</div>
 	);
@@ -277,15 +469,13 @@ const TextOverlay: React.FC<{text: string; startFrame: number; durationFrames: n
 export const RaulButaciUTMB: React.FC = () => {
 	const {fps} = useVideoConfig();
 
-	// Total frames: 87 seconds @ 30fps = 2610 frames
-	const HOOK_START = 0;
-	const HOOK_END = 8 * fps; // 8 seconds for hook
-	const AUDIO_START = HOOK_END; // Frame 240
-	const AUDIO_DURATION = 75; // 75 seconds of audio
-	const AUDIO_END = AUDIO_START + AUDIO_DURATION * fps; // Frame 2490
-	const CTA_START = AUDIO_END; // Frame 2490
-	const CTA_DURATION = 4; // 4 seconds
-	const CTA_END = CTA_START + CTA_DURATION * fps; // Frame 2610
+	const HOOK_END = 5.5 * fps; // Frame 165 (5.5 seconds)
+	const AUDIO_START = HOOK_END;
+	const AUDIO_DURATION = 75;
+	const AUDIO_END = AUDIO_START + AUDIO_DURATION * fps;
+	const CTA_START = AUDIO_END;
+	const CTA_DURATION = 4;
+	const CTA_END = CTA_START + CTA_DURATION * fps;
 
 	return (
 		<AbsoluteFill style={{backgroundColor: '#0A0A0A'}}>
@@ -298,46 +488,19 @@ export const RaulButaciUTMB: React.FC = () => {
 				{/* Dark overlay for text contrast */}
 				<AbsoluteFill
 					style={{
-						backgroundColor: 'rgba(0, 0, 0, 0.4)',
+						backgroundColor: 'rgba(0, 0, 0, 0.5)',
 						backdropFilter: 'blur(1px)',
 					}}
 				/>
 			</AbsoluteFill>
 
-			{/* Hook Text Layer (0-8 seconds) */}
-			<TextOverlay
-				text="RAÚL BUTACI"
-				startFrame={0}
-				durationFrames={60}
-				fontSize={72}
-				color="#FFFFFF"
-			/>
+			{/* Premium Hook Sequence (0-5.5s) */}
+			<HookNameTitle />
+			<HookMainTitle />
+			<HookBadge />
+			<HookAudioIntro />
 
-			<TextOverlay
-				text="CANDIDATO AL PODIO"
-				startFrame={60}
-				durationFrames={60}
-				fontSize={96}
-				color="#FFFFFF"
-			/>
-
-			<TextOverlay
-				text="UTMB 2026"
-				startFrame={120}
-				durationFrames={60}
-				fontSize={64}
-				color="#FF8C00"
-			/>
-
-			<TextOverlay
-				text="EL AUDIO QUE ENVIÓ ANTES DE LA LARGADA"
-				startFrame={180}
-				durationFrames={60}
-				fontSize={36}
-				color="#FFFFFF"
-			/>
-
-			{/* Audio - Starts at frame 240 (8 seconds) */}
+			{/* Audio - Starts at frame 165 (5.5 seconds) */}
 			<Sequence from={AUDIO_START} durationInFrames={AUDIO_DURATION * fps}>
 				<Audio src={staticFile('raul-butaci-audio-body.ogg')} />
 			</Sequence>
@@ -365,6 +528,7 @@ export const RaulButaciUTMB: React.FC = () => {
 							textTransform: 'uppercase',
 							marginBottom: 20,
 							textShadow: '0 4px 12px rgba(0,0,0,0.8)',
+							fontFamily: 'Arial, sans-serif',
 						}}
 					>
 						RAÚL BUTACI
@@ -378,6 +542,7 @@ export const RaulButaciUTMB: React.FC = () => {
 							letterSpacing: '1px',
 							textTransform: 'uppercase',
 							marginBottom: 40,
+							fontFamily: 'Arial, sans-serif',
 						}}
 					>
 						UTMB 2026
@@ -390,6 +555,7 @@ export const RaulButaciUTMB: React.FC = () => {
 							textAlign: 'center',
 							lineHeight: 1.4,
 							marginBottom: 30,
+							fontFamily: 'Arial, sans-serif',
 						}}
 					>
 						SEGUÍ SU CAMINO EN EL UTMB
@@ -401,6 +567,7 @@ export const RaulButaciUTMB: React.FC = () => {
 							color: '#FF8C00',
 							textAlign: 'center',
 							lineHeight: 1.3,
+							fontFamily: 'Arial, sans-serif',
 						}}
 					>
 						SEGUINOS PARA SEGUIR LA CARRERA
