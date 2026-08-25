@@ -8,11 +8,12 @@
     "build-still": "remotion still src/index.tsx still.png"
   },
   "dependencies": {
-    "remotion": "^4.0.0",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "remotion": "^4.0.0"
   },
   "devDependencies": {
+    "@remotion/cli": "^4.0.516",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "typescript": "^5.0.0"
