@@ -1,0 +1,26 @@
+🎬 Raúl Butaci UTMB Video Renderer
+===================================
+1️⃣  Starting Remotion preview server...
+⏳ Waiting for preview server to start...
+✓ Server is ready on port 3000
+2️⃣  Preparing render...
+🌐 Launching browser...
+📄 Loading Remotion preview on port 3000...
+3️⃣  Capturing frames (this may take a few minutes)...
+  Progress: 100 key frames captured  Progress: 200 key frames captured  Progress: 300 key frames captured  Progress: 400 key frames captured  Progress: 500 key frames captured  Progress: 600 key frames captured  Progress: 700 key frames captured  Progress: 800 key frames captured  Progress: 900 key frames captured  Progress: 1000 key frames captured  Progress: 1100 key frames captured  Progress: 1200 key frames captured  Progress: 1300 key frames captured  Progress: 1400 key frames captured  Progress: 1500 key frames captured  Progress: 1600 key frames captured  Progress: 1700 key frames captured  Progress: 1800 key frames captured
+  ✓ Captured 1800 key frames
+4️⃣  Creating video from frames...
+  Progress: 1/3600 frames encoded
+  ✓ Video created successfully
+5️⃣  Cleaning up...
+
+✅ RENDER COMPLETE!
+========================================
+📽️  File: raul-butaci-utmb-2026.mp4
+📊 Size: 0.02 MB
+⏱️  Duration: 120 seconds (120 seconds max)
+📹 Resolution: 1080x1920 (9:16 vertical)
+🎬 Frames: 3600 @ 30 fps
+🎵 Audio: raul-butaci-audio-trimmed.ogg (115 seconds)
+========================================
+
