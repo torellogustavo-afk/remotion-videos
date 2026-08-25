@@ -1,0 +1,201 @@
+{
+  "project": {
+    "title": "Raúl Butací - UTMB 100 Millas 2024",
+    "description": "Colección de videos virales promocionando a Raúl Butací en la Ultra-Trail du Mont-Blanc",
+    "year": 2024,
+    "event": "UTMB 2024",
+    "runner": {
+      "name": "Raúl Butací",
+      "title": "Ultra Runner",
+      "specialty": "Ultra-Trail Running"
+    }
+  },
+  "videos": [
+    {
+      "id": "RaulButaciUTMB",
+      "name": "Main UTMB Video",
+      "description": "Composición principal con animaciones dinámicas y estadísticas",
+      "duration": {
+        "seconds": 10,
+        "frames": 300,
+        "fps": 30
+      },
+      "resolution": {
+        "width": 1920,
+        "height": 1080,
+        "aspectRatio": "16:9"
+      },
+      "platforms": ["YouTube", "Instagram", "TikTok", "Twitter", "LinkedIn"],
+      "features": [
+        "Spring animations",
+        "Sliding transitions",
+        "Gradient overlays",
+        "Golden and Crimson color scheme",
+        "Statistics cards",
+        "Motivational messaging"
+      ],
+      "components": {
+        "title": {
+          "text": "RAÚL BUTACÍ UTMB 100 MILLAS",
+          "fontSize": 120,
+          "color": "#FFD700"
+        },
+        "stats": [
+          { "label": "Kilómetros", "value": "160", "color": "#FFD700" },
+          { "label": "Metros D+", "value": "10K", "color": "#DC143C" },
+          { "label": "Límite", "value": "46H", "color": "#FFFFFF" }
+        ]
+      }
+    },
+    {
+      "id": "RaulButaciUTMBAdvanced",
+      "name": "Advanced Premium Video",
+      "description": "Versión cinematográfica con visualización de montañas y efectos avanzados",
+      "duration": {
+        "seconds": 12,
+        "frames": 360,
+        "fps": 30
+      },
+      "resolution": {
+        "width": 1920,
+        "height": 1080,
+        "aspectRatio": "16:9"
+      },
+      "platforms": ["YouTube", "Professional Streaming", "Corporate"],
+      "features": [
+        "Dramatic spring animations",
+        "SVG mountain visualization",
+        "Runner profile section",
+        "Animated gradient border",
+        "Challenge messaging",
+        "Cinematic transitions",
+        "Multiple animation sequences"
+      ],
+      "components": {
+        "title": { "text": "UTMB 2024", "fontSize": 150, "color": "#FFD700" },
+        "subtitle": { "text": "100 MILLAS", "fontSize": 70, "color": "#FFFFFF" },
+        "challenge": {
+          "title": "EL DESAFÍO MÁS EXTREMO",
+          "message": "Corriendo donde pocos se atreven"
+        }
+      }
+    },
+    {
+      "id": "RaulButaciShorts",
+      "name": "Viral Shorts Optimized",
+      "description": "Optimizado para Instagram Reels, TikTok y YouTube Shorts - Formato vertical",
+      "duration": {
+        "seconds": 12,
+        "frames": 360,
+        "fps": 30
+      },
+      "resolution": {
+        "width": 1920,
+        "height": 1080,
+        "aspectRatio": "16:9"
+      },
+      "platforms": ["Instagram Reels", "TikTok", "YouTube Shorts", "Twitter", "Facebook"],
+      "features": [
+        "Speed line effects",
+        "Quick-cut transitions",
+        "Emoji-based stats",
+        "Animated corner accents",
+        "Viral hook messaging",
+        "Fast-paced animation",
+        "Social media optimized"
+      ],
+      "components": {
+        "mainHook": { "text": "160 KM SIN PARAR", "fontSize": 140, "color": "#FFD700" },
+        "stats": [
+          { "emoji": "⛰️", "label": "Elevación", "value": "10K+" },
+          { "emoji": "⏱️", "label": "Límite", "value": "46H" },
+          { "emoji": "🏔️", "label": "UTMB", "value": "2024" }
+        ],
+        "cta": { "text": "¡VAMOS!", "hashtags": ["#UTMB", "#ULTRARUNNER", "#LIMIT"] }
+      }
+    }
+  ],
+  "eventDetails": {
+    "name": "Ultra-Trail du Mont-Blanc",
+    "shortName": "UTMB",
+    "year": 2024,
+    "distance": {
+      "km": 160,
+      "miles": 100
+    },
+    "elevation": {
+      "meters": 10000,
+      "feet": 32808
+    },
+    "timeLimit": {
+      "hours": 46
+    },
+    "difficulty": "Extreme",
+    "location": "Mont Blanc, Europa"
+  },
+  "colorScheme": {
+    "primary": "#FFD700",
+    "primaryName": "Gold",
+    "secondary": "#DC143C",
+    "secondaryName": "Crimson Red",
+    "accent": "#FFFFFF",
+    "accentName": "White",
+    "background": "#000000",
+    "backgroundName": "Black"
+  },
+  "typography": {
+    "primary": "Arial Black",
+    "fallback": "sans-serif",
+    "weights": {
+      "regular": 400,
+      "bold": 700,
+      "extraBold": 800,
+      "black": 900
+    }
+  },
+  "technicalSpecs": {
+    "framework": "Remotion",
+    "language": "TypeScript",
+    "uiLibrary": "React 18",
+    "videoCodec": "H.264",
+    "encoding": "FFmpeg",
+    "outputFormat": "MP4"
+  },
+  "distribution": {
+    "instagram": {
+      "format": "Reels",
+      "recommendedVideo": "RaulButaciShorts",
+      "duration": "12s",
+      "aspectRatio": "9:16 or 1:1"
+    },
+    "tiktok": {
+      "format": "Short-form",
+      "recommendedVideo": "RaulButaciShorts",
+      "duration": "12s",
+      "maxDuration": "60s"
+    },
+    "youtube": {
+      "format": "Shorts and Full",
+      "recommendedVideo": "RaulButaciUTMBAdvanced",
+      "duration": "12s for shorts",
+      "aspectRatio": "16:9"
+    },
+    "twitter": {
+      "recommendedVideo": "RaulButaciUTMB",
+      "duration": "10s",
+      "aspectRatio": "16:9"
+    }
+  },
+  "hashtags": {
+    "primary": ["#UTMB2024", "#UTMB", "#ULTRARUNNER"],
+    "secondary": ["#MontBlanc", "#UltraTrail", "#TrailRunning"],
+    "runner": ["#RaúlButací", "#LIMIT"],
+    "viral": ["#VamosRaúl", "#160KM", "#NoParar"]
+  },
+  "metadata": {
+    "createdAt": "2026-08-25",
+    "version": "1.0.0",
+    "status": "Production Ready",
+    "license": "All Rights Reserved - Event Promotion"
+  }
+}
