@@ -5,10 +5,10 @@ import { MyComposition } from './Composition';
 export const RemotionRoot: React.FC = () => {
   return (
     <Composition
-      id="MyComp"
+      id="InvestmentPlatformAd"
       component={MyComposition}
-      durationInFrames={150}
-      fps={30}
+      durationInFrames={540}
+      fps={60}
       width={1920}
       height={1080}
     />
