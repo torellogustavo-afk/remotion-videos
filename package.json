@@ -4,15 +4,19 @@
   "description": "A Remotion video project",
   "scripts": {
     "start": "remotion preview src/index.tsx",
-    "build": "remotion render src/index.tsx output.mp4",
+    "build": "remotion render src/index.tsx InvestmentPlatformAd --output output.mp4 && remotion render src/index.tsx InvestmentPlatformAdVertical --output output-vertical.mp4",
+    "build:horizontal": "remotion render src/index.tsx InvestmentPlatformAd --output output.mp4",
+    "build:vertical": "remotion render src/index.tsx InvestmentPlatformAdVertical --output output-vertical.mp4",
     "build-still": "remotion still src/index.tsx still.png"
   },
   "dependencies": {
-    "remotion": "^4.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.518"
   },
   "devDependencies": {
+    "@remotion/cli": "^4.0.518",
+    "@types/node": "^26.3.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "typescript": "^5.0.0"

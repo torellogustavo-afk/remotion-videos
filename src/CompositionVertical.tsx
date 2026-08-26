@@ -1,12 +1,12 @@
 import React from 'react';
 import { AbsoluteFill, useVideoConfig, interpolate, useCurrentFrame, Easing } from 'remotion';
-import { HeroScene } from './scenes/HeroScene';
-import { MetricsScene } from './scenes/MetricsScene';
-import { ChartsScene } from './scenes/ChartsScene';
-import { FeatureShowcase } from './scenes/FeatureShowcase';
-import { CTAScene } from './scenes/CTAScene';
+import { HeroSceneVertical } from './scenes/HeroSceneVertical';
+import { MetricsSceneVertical } from './scenes/MetricsSceneVertical';
+import { ChartsSceneVertical } from './scenes/ChartsSceneVertical';
+import { FeatureShowcaseVertical } from './scenes/FeatureShowcaseVertical';
+import { CTASceneVertical } from './scenes/CTASceneVertical';
 
-export const MyComposition: React.FC = () => {
+export const MyCompositionVertical: React.FC = () => {
   const config = useVideoConfig();
   const frame = useCurrentFrame();
 
@@ -29,26 +29,26 @@ export const MyComposition: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: '#0a0e27', overflow: 'hidden' }}>
       {/* Scene 1: Hero - The Opportunity */}
-      {frame < heroEnd && <HeroScene frameProgress={frame / heroEnd} />}
+      {frame < heroEnd && <HeroSceneVertical frameProgress={frame / heroEnd} />}
 
       {/* Scene 2: Metrics & Analytics */}
       {frame >= heroEnd && frame < metricsEnd && (
-        <MetricsScene frameProgress={(frame - heroEnd) / sceneLength} />
+        <MetricsSceneVertical frameProgress={(frame - heroEnd) / sceneLength} />
       )}
 
       {/* Scene 3: Advanced Charts & Analysis */}
       {frame >= metricsEnd && frame < chartsEnd && (
-        <ChartsScene frameProgress={(frame - metricsEnd) / (sceneLength * 1.5)} />
+        <ChartsSceneVertical frameProgress={(frame - metricsEnd) / (sceneLength * 1.5)} />
       )}
 
       {/* Scene 4: Feature Showcase */}
       {frame >= chartsEnd && frame < featuresEnd && (
-        <FeatureShowcase frameProgress={(frame - chartsEnd) / (sceneLength * 2)} />
+        <FeatureShowcaseVertical frameProgress={(frame - chartsEnd) / (sceneLength * 2)} />
       )}
 
       {/* Scene 5: CTA */}
       {frame >= featuresEnd && (
-        <CTAScene frameProgress={(frame - featuresEnd) / sceneLength} />
+        <CTASceneVertical frameProgress={(frame - featuresEnd) / sceneLength} />
       )}
     </AbsoluteFill>
   );
