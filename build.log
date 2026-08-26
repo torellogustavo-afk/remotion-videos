@@ -1,0 +1,5 @@
+
+> remotion-video@1.0.0 build
+> remotion render src/index.tsx output.mp4
+
+sh: 1: remotion: not found
