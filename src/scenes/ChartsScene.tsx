@@ -19,12 +19,14 @@ const AnimatedChart: React.FC<{ frameProgress: number }> = ({ frameProgress }) =
     return `M ${points.join(' L ')}`;
   };
 
-  const lineOpacity = interpolate(frameProgress, [0, 0.2], [0, 1], { easing: Easing.out(Easing.cubic) });
-  const fillOpacity = interpolate(frameProgress, [0.1, 0.3], [0, 0.15], { easing: Easing.out(Easing.cubic) });
+  // LINE CHART: enters slowly, stays visible, then fades when candlesticks come
+  const lineOpacity = interpolate(frameProgress, [0, 0.25, 0.5, 0.75], [0, 1, 1, 0.3], { easing: Easing.out(Easing.quad) });
+  const fillOpacity = interpolate(frameProgress, [0.1, 0.35, 0.5, 0.75], [0, 0.15, 0.15, 0.05], { easing: Easing.out(Easing.quad) });
 
-  // Candlestick animation
-  const candleOpacity = interpolate(frameProgress, [0.3, 0.5], [0, 1], { easing: Easing.out(Easing.cubic) });
-  const candleScale = interpolate(frameProgress, [0.3, 0.6], [0, 1], { easing: Easing.out(Easing.cubic) });
+  // CANDLESTICK: appears AFTER line is understood (not overlapping)
+  // Starts entering at 0.5, fully visible 0.65-1.0
+  const candleOpacity = interpolate(frameProgress, [0.5, 0.65, 0.85, 1], [0, 1, 1, 0], { easing: Easing.out(Easing.quad) });
+  const candleScale = interpolate(frameProgress, [0.5, 0.75], [0, 1], { easing: Easing.out(Easing.quad) });
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -101,8 +103,13 @@ const AnimatedChart: React.FC<{ frameProgress: number }> = ({ frameProgress }) =
 };
 
 export const ChartsScene: React.FC<ChartsSceneProps> = ({ frameProgress }) => {
-  const contentOpacity = interpolate(frameProgress, [0, 0.1], [0, 1], { easing: Easing.out(Easing.cubic) });
-  const fadeOut = interpolate(frameProgress, [0.85, 1], [1, 0], { easing: Easing.in(Easing.ease) });
+  // Title enters early and stays visible
+  const contentOpacity = interpolate(frameProgress, [0, 0.15], [0, 1], { easing: Easing.out(Easing.quad) });
+  // Fade out at the very end
+  const fadeOut = interpolate(frameProgress, [0.9, 1], [1, 0], { easing: Easing.in(Easing.quad) });
+
+  // Percentage badge enters after candlesticks (0.65+)
+  const percentageOpacity = interpolate(frameProgress, [0.65, 0.8], [0, 1], { easing: Easing.out(Easing.quad) });
 
   return (
     <AbsoluteFill
@@ -139,7 +146,7 @@ export const ChartsScene: React.FC<ChartsSceneProps> = ({ frameProgress }) => {
           position: 'absolute',
           bottom: 60,
           right: 60,
-          opacity: contentOpacity,
+          opacity: percentageOpacity,
           zIndex: 10,
           textAlign: 'right',
         }}

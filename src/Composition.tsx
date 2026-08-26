@@ -11,14 +11,20 @@ export const MyComposition: React.FC = () => {
   const frame = useCurrentFrame();
 
   // Scene timing (60fps, so divide by 60 for seconds)
-  const sceneLength = 90; // 1.5 seconds per scene
+  // Increased timing for clarity: 2-4s per scene instead of 1.5s
+  const sceneLength = 120; // 2 seconds base per scene @ 60fps
   const totalFrames = config.durationInFrames;
 
-  const heroEnd = sceneLength;
-  const metricsEnd = heroEnd + sceneLength;
-  const chartsEnd = metricsEnd + sceneLength * 1.5;
-  const featuresEnd = chartsEnd + sceneLength * 2;
-  const ctaEnd = featuresEnd + sceneLength;
+  // Hero: 3s (hook needs impact + readability)
+  const heroEnd = sceneLength * 1.5;
+  // Metrics: 4s (numbers need time to read and understand)
+  const metricsEnd = heroEnd + sceneLength * 2;
+  // Charts: 4.5s (animations + analysis comprehension)
+  const chartsEnd = metricsEnd + sceneLength * 2.25;
+  // Features: 5s (4 cards need individual breathing room)
+  const featuresEnd = chartsEnd + sceneLength * 2.5;
+  // CTA: 3.5s (conversion message needs clarity)
+  const ctaEnd = featuresEnd + sceneLength * 1.75;
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0a0e27', overflow: 'hidden' }}>

@@ -14,8 +14,10 @@ const FeatureCard: React.FC<{
   position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }> = ({ icon, title, description, delay, frameProgress, position }) => {
   const adjustedProgress = Math.max(0, frameProgress - delay);
-  const opacity = interpolate(adjustedProgress, [0, 0.15], [0, 1], { easing: Easing.out(Easing.cubic) });
-  const scale = interpolate(adjustedProgress, [0, 0.25], [0.7, 1], { easing: Easing.out(Easing.cubic) });
+  // Slower entrance: 0.3s to appear, stays visible, slower exit
+  const opacity = interpolate(adjustedProgress, [0, 0.3, 0.8, 1], [0, 1, 1, 0], { easing: Easing.out(Easing.quad) });
+  // Subtle scale: not aggressive
+  const scale = interpolate(adjustedProgress, [0, 0.4], [0.85, 1], { easing: Easing.out(Easing.quad) });
 
   const positionStyles: Record<string, React.CSSProperties> = {
     'top-left': { top: 120, left: 60 },
@@ -52,7 +54,11 @@ const FeatureCard: React.FC<{
 };
 
 export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress }) => {
-  const fadeOut = interpolate(frameProgress, [0.9, 1], [1, 0], { easing: Easing.in(Easing.ease) });
+  // Keep visible until very end for reading
+  const fadeOut = interpolate(frameProgress, [0.92, 1], [1, 0], { easing: Easing.in(Easing.quad) });
+
+  // Title entrance
+  const titleOpacity = interpolate(frameProgress, [0, 0.15], [0, 1], { easing: Easing.out(Easing.quad) });
 
   return (
     <AbsoluteFill
@@ -72,7 +78,7 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
           right: 0,
           textAlign: 'center',
           zIndex: 20,
-          opacity: interpolate(frameProgress, [0, 0.2], [0, 1], { easing: Easing.out(Easing.cubic) }),
+          opacity: titleOpacity,
         }}
       >
         <h2 style={{ fontSize: 52, fontWeight: 900, color: 'white', margin: 0, fontFamily: "'Inter', sans-serif" }}>
@@ -83,12 +89,12 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
         </p>
       </div>
 
-      {/* Feature cards */}
+      {/* Feature cards - SPACED OUT for clarity */}
       <FeatureCard
         icon="📊"
         title="Mapas de Calor"
         description="Visualización de volatilidad por zonas geográficas y sectores de mercado"
-        delay={0.1}
+        delay={0.15}
         frameProgress={frameProgress}
         position="top-left"
       />
@@ -97,7 +103,7 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
         icon="💹"
         title="Cotizaciones Vivas"
         description="Datos en tiempo real de miles de activos financieros"
-        delay={0.2}
+        delay={0.35}
         frameProgress={frameProgress}
         position="top-right"
       />
@@ -106,7 +112,7 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
         icon="📈"
         title="Gráficos TradingView"
         description="Análisis técnico avanzado con indicadores profesionales"
-        delay={0.3}
+        delay={0.55}
         frameProgress={frameProgress}
         position="bottom-left"
       />
@@ -115,7 +121,7 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
         icon="🎯"
         title="Señales Precisas"
         description="Alertas de compra/venta basadas en estrategias comprobadas"
-        delay={0.4}
+        delay={0.75}
         frameProgress={frameProgress}
         position="bottom-right"
       />

@@ -12,10 +12,14 @@ const AnimatedMetric: React.FC<{
   frameProgress: number;
   icon: string;
 }> = ({ value, label, delay, frameProgress, icon }) => {
+  // Stagger delays: each metric enters 0.25s apart (more breathing room)
   const adjustedProgress = Math.max(0, frameProgress - delay);
-  const opacity = interpolate(adjustedProgress, [0, 0.2], [0, 1], { easing: Easing.out(Easing.cubic) });
-  const scale = interpolate(adjustedProgress, [0, 0.3], [0.5, 1], { easing: Easing.out(Easing.cubic) });
-  const displayValue = Math.round(interpolate(adjustedProgress, [0, 1], [0, value]));
+  // Slower opacity: 0.3s to appear fully, 0.5s to disappear
+  const opacity = interpolate(adjustedProgress, [0, 0.3, 0.75, 1], [0, 1, 1, 0], { easing: Easing.out(Easing.quad) });
+  // Gentler scale: subtle entrance
+  const scale = interpolate(adjustedProgress, [0, 0.4], [0.8, 1], { easing: Easing.out(Easing.quad) });
+  // Number animation: slower count (0.6s instead of instant)
+  const displayValue = Math.round(interpolate(adjustedProgress, [0, 0.6], [0, value]));
 
   return (
     <div
@@ -37,7 +41,11 @@ const AnimatedMetric: React.FC<{
 };
 
 export const MetricsScene: React.FC<MetricsSceneProps> = ({ frameProgress }) => {
-  const fadeOut = interpolate(frameProgress, [0.8, 1], [1, 0], { easing: Easing.in(Easing.ease) });
+  // Fade out later to give time for reading
+  const fadeOut = interpolate(frameProgress, [0.85, 1], [1, 0], { easing: Easing.in(Easing.quad) });
+
+  // Title entrance
+  const titleOpacity = interpolate(frameProgress, [0, 0.15], [0, 1], { easing: Easing.out(Easing.quad) });
 
   return (
     <AbsoluteFill
@@ -48,7 +56,15 @@ export const MetricsScene: React.FC<MetricsSceneProps> = ({ frameProgress }) => 
         opacity: fadeOut,
       }}
     >
-      <div style={{ position: 'absolute', top: 80, fontSize: 48, fontWeight: 700, color: 'white', fontFamily: "'Inter', sans-serif" }}>
+      <div style={{
+        position: 'absolute',
+        top: 80,
+        fontSize: 48,
+        fontWeight: 700,
+        color: 'white',
+        fontFamily: "'Inter', sans-serif",
+        opacity: titleOpacity,
+      }}>
         Métricas de Análisis
       </div>
 
@@ -61,10 +77,11 @@ export const MetricsScene: React.FC<MetricsSceneProps> = ({ frameProgress }) => 
           padding: '0 40px',
         }}
       >
-        <AnimatedMetric value={5000000} label="Usuarios Activos" delay={0} frameProgress={frameProgress} icon="👥" />
-        <AnimatedMetric value={15000} label="Activos Analizados" delay={0.1} frameProgress={frameProgress} icon="📊" />
-        <AnimatedMetric value={24} label="Horas Análisis Diario" delay={0.2} frameProgress={frameProgress} icon="⏱️" />
-        <AnimatedMetric value={99.9} label="% Uptime" delay={0.3} frameProgress={frameProgress} icon="✅" />
+        {/* Staggered delays: 0.2s apart for clear sequential entry */}
+        <AnimatedMetric value={5000000} label="Usuarios Activos" delay={0.15} frameProgress={frameProgress} icon="👥" />
+        <AnimatedMetric value={15000} label="Activos Analizados" delay={0.35} frameProgress={frameProgress} icon="📊" />
+        <AnimatedMetric value={24} label="Horas Análisis Diario" delay={0.55} frameProgress={frameProgress} icon="⏱️" />
+        <AnimatedMetric value={99.9} label="% Uptime" delay={0.75} frameProgress={frameProgress} icon="✅" />
       </div>
     </AbsoluteFill>
   );

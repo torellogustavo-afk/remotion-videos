@@ -6,15 +6,27 @@ interface CTASceneProps {
 }
 
 export const CTAScene: React.FC<CTASceneProps> = ({ frameProgress }) => {
-  const mainOpacity = interpolate(frameProgress, [0, 0.15], [0, 1], { easing: Easing.out(Easing.cubic) });
-  const titleScale = interpolate(frameProgress, [0, 0.3], [0.8, 1], { easing: Easing.out(Easing.cubic) });
-  const subtitleY = interpolate(frameProgress, [0.1, 0.4], [30, 0], { easing: Easing.out(Easing.cubic) });
-  const ctaScale = interpolate(frameProgress, [0.2, 0.5], [0.7, 1], { easing: Easing.out(Easing.cubic) });
-  const ctaY = interpolate(frameProgress, [0.2, 0.5], [40, 0], { easing: Easing.out(Easing.cubic) });
+  // Main entrance - slower and steadier
+  const mainOpacity = interpolate(frameProgress, [0, 0.2, 0.9, 1], [0, 1, 1, 0], { easing: Easing.out(Easing.quad) });
+
+  // Title: appears smoothly over 0.4s
+  const titleScale = interpolate(frameProgress, [0, 0.4], [0.9, 1], { easing: Easing.out(Easing.quad) });
+  const titleOpacity = interpolate(frameProgress, [0, 0.25], [0, 1], { easing: Easing.out(Easing.quad) });
+
+  // Subtitle: appears AFTER title is visible (0.3+), with delay
+  const subtitleY = interpolate(frameProgress, [0.25, 0.55], [30, 0], { easing: Easing.out(Easing.quad) });
+  const subtitleOpacity = interpolate(frameProgress, [0.25, 0.4], [0, 1], { easing: Easing.out(Easing.quad) });
+
+  // CTA: appears last (0.45+), gives focus to conversion message
+  const ctaScale = interpolate(frameProgress, [0.45, 0.7], [0.8, 1], { easing: Easing.out(Easing.quad) });
+  const ctaOpacity = interpolate(frameProgress, [0.45, 0.6], [0, 1], { easing: Easing.out(Easing.quad) });
+  const ctaY = interpolate(frameProgress, [0.45, 0.7], [40, 0], { easing: Easing.out(Easing.quad) });
+
+  // Pulse: only after CTA is stable (0.65+), and subtle
   const pulseOpacity = interpolate(
-    (frameProgress - 0.4) * 2 % 1,
+    frameProgress > 0.65 ? ((frameProgress - 0.65) * 3 % 1) : 0,
     [0, 0.5, 1],
-    [1, 0.6, 1],
+    [1, 0.4, 1],
     { easing: Easing.linear }
   );
 
@@ -63,6 +75,7 @@ export const CTAScene: React.FC<CTASceneProps> = ({ frameProgress }) => {
             transform: `scale(${titleScale})`,
             fontFamily: "'Inter', sans-serif",
             lineHeight: 1.1,
+            opacity: titleOpacity,
           }}
         >
           5 Millones de Traders<br />
@@ -80,7 +93,7 @@ export const CTAScene: React.FC<CTASceneProps> = ({ frameProgress }) => {
             fontFamily: "'Inter', sans-serif",
             fontWeight: 300,
             lineHeight: 1.6,
-            opacity: 0.9,
+            opacity: subtitleOpacity,
           }}
         >
           ¿Por qué esperar? Accede hoy a las herramientas que te pueden cambiar el juego
@@ -91,6 +104,7 @@ export const CTAScene: React.FC<CTASceneProps> = ({ frameProgress }) => {
           style={{
             marginTop: 48,
             transform: `translateY(${ctaY}px) scale(${ctaScale})`,
+            opacity: ctaOpacity,
           }}
         >
           <button
@@ -114,15 +128,15 @@ export const CTAScene: React.FC<CTASceneProps> = ({ frameProgress }) => {
           </button>
         </div>
 
-        {/* Trust badges */}
+        {/* Trust badges - appear after CTA */}
         <div
           style={{
             marginTop: 48,
             display: 'flex',
             justifyContent: 'center',
             gap: 48,
-            opacity: interpolate(frameProgress, [0.5, 0.8], [0, 1], { easing: Easing.out(Easing.cubic) }),
-            transform: `translateY(${interpolate(frameProgress, [0.5, 0.8], [30, 0], { easing: Easing.out(Easing.cubic) })}px)`,
+            opacity: interpolate(frameProgress, [0.65, 0.85], [0, 1], { easing: Easing.out(Easing.quad) }),
+            transform: `translateY(${interpolate(frameProgress, [0.65, 0.85], [30, 0], { easing: Easing.out(Easing.quad) })}px)`,
           }}
         >
           <div style={{ textAlign: 'center' }}>

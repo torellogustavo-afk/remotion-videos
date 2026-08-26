@@ -6,20 +6,24 @@ interface HeroSceneProps {
 }
 
 export const HeroScene: React.FC<HeroSceneProps> = ({ frameProgress }) => {
-  const opacity = interpolate(frameProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0], {
+  // Fade: slower entrance (0.2s) + stable hold + slower exit (0.4s)
+  const opacity = interpolate(frameProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0], {
     easing: Easing.inOut(Easing.ease),
   });
 
-  const scale = interpolate(frameProgress, [0, 0.3], [0.9, 1], {
-    easing: Easing.out(Easing.cubic),
+  // Scale: smooth, not aggressive
+  const scale = interpolate(frameProgress, [0, 0.4], [0.95, 1], {
+    easing: Easing.out(Easing.quad),
   });
 
-  const titleY = interpolate(frameProgress, [0, 0.4], [50, 0], {
-    easing: Easing.out(Easing.cubic),
+  // Title: enter slowly, stay visible longer
+  const titleY = interpolate(frameProgress, [0, 0.5], [50, 0], {
+    easing: Easing.out(Easing.quad),
   });
 
-  const subtitleY = interpolate(frameProgress, [0.1, 0.5], [50, 0], {
-    easing: Easing.out(Easing.cubic),
+  // Subtitle: staggered entry (starts later), smooth
+  const subtitleY = interpolate(frameProgress, [0.15, 0.6], [50, 0], {
+    easing: Easing.out(Easing.quad),
   });
 
   return (
