@@ -5,7 +5,7 @@ interface ChartsSceneProps {
   frameProgress: number;
 }
 
-const AnimatedChart: React.FC<{ frameProgress: number }> = ({ frameProgress }) => {
+const AnimatedChart: React.FC<{ frameProgress: number; glowIntensity: number }> = ({ frameProgress, glowIntensity }) => {
   const generateChartPath = (progress: number) => {
     const points = [];
     const steps = 100;
@@ -46,6 +46,13 @@ const AnimatedChart: React.FC<{ frameProgress: number }> = ({ frameProgress }) =
             <stop offset="0%" stopColor="#00b8ff" stopOpacity={fillOpacity} />
             <stop offset="100%" stopColor="#00b8ff" stopOpacity="0" />
           </linearGradient>
+          <filter id="chartGlow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
 
         {/* Grid lines */}
@@ -67,6 +74,7 @@ const AnimatedChart: React.FC<{ frameProgress: number }> = ({ frameProgress }) =
           opacity={lineOpacity}
           strokeLinecap="round"
           strokeLinejoin="round"
+          filter="url(#chartGlow)"
         />
 
         {/* Candlestick representation */}
@@ -111,6 +119,19 @@ export const ChartsScene: React.FC<ChartsSceneProps> = ({ frameProgress }) => {
   // Percentage badge enters after candlesticks (0.65+)
   const percentageOpacity = interpolate(frameProgress, [0.65, 0.8], [0, 1], { easing: Easing.out(Easing.quad) });
 
+  // Cinematic zoom effect on background
+  const bgZoom = interpolate(frameProgress, [0, 1], [1, 1.05], {
+    easing: Easing.linear,
+  });
+
+  // Glow intensity pulse
+  const glowIntensity = interpolate(
+    frameProgress,
+    [0, 0.3, 0.7, 1],
+    [0, 1, 1, 0.5],
+    { easing: Easing.inOut(Easing.quad) }
+  );
+
   return (
     <AbsoluteFill
       style={{
@@ -118,8 +139,40 @@ export const ChartsScene: React.FC<ChartsSceneProps> = ({ frameProgress }) => {
         justifyContent: 'center',
         alignItems: 'center',
         opacity: fadeOut,
+        overflow: 'hidden',
       }}
     >
+      {/* Animated gradient background elements */}
+      <div
+        style={{
+          position: 'absolute',
+          width: 600,
+          height: 600,
+          background: 'radial-gradient(circle, rgba(0,184,255,0.15) 0%, transparent 70%)',
+          borderRadius: '50%',
+          top: '10%',
+          right: '-10%',
+          filter: `blur(60px)`,
+          transform: `scale(${bgZoom})`,
+          opacity: glowIntensity * 0.6,
+        }}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          width: 800,
+          height: 800,
+          background: 'radial-gradient(circle, rgba(0,255,150,0.08) 0%, transparent 70%)',
+          borderRadius: '50%',
+          bottom: '-20%',
+          left: '-15%',
+          filter: `blur(80px)`,
+          transform: `scale(${bgZoom})`,
+          opacity: glowIntensity * 0.4,
+        }}
+      />
+
       <div
         style={{
           position: 'absolute',
@@ -129,7 +182,7 @@ export const ChartsScene: React.FC<ChartsSceneProps> = ({ frameProgress }) => {
           zIndex: 10,
         }}
       >
-        <div style={{ fontSize: 44, fontWeight: 700, color: 'white', fontFamily: "'Inter', sans-serif", marginBottom: 12 }}>
+        <div style={{ fontSize: 44, fontWeight: 700, color: 'white', fontFamily: "'Inter', sans-serif", marginBottom: 12, textShadow: `0 0 20px rgba(0, 184, 255, ${glowIntensity * 0.3})` }}>
           Gráficos Avanzados
         </div>
         <div style={{ fontSize: 18, color: '#a0aec0', fontFamily: "'Inter', sans-serif" }}>
@@ -138,7 +191,7 @@ export const ChartsScene: React.FC<ChartsSceneProps> = ({ frameProgress }) => {
       </div>
 
       <div style={{ position: 'relative', width: '90%', height: '70%', maxWidth: 1000 }}>
-        <AnimatedChart frameProgress={frameProgress} />
+        <AnimatedChart frameProgress={frameProgress} glowIntensity={glowIntensity} />
       </div>
 
       <div
@@ -151,13 +204,27 @@ export const ChartsScene: React.FC<ChartsSceneProps> = ({ frameProgress }) => {
           textAlign: 'right',
         }}
       >
-        <div style={{ fontSize: 32, fontWeight: 700, color: '#00ff96', fontFamily: "'Inter', sans-serif" }}>
+        <div style={{ fontSize: 32, fontWeight: 700, color: '#00ff96', fontFamily: "'Inter', sans-serif", textShadow: `0 0 20px rgba(0, 255, 150, ${glowIntensity * 0.3})` }}>
           +2.85%
         </div>
         <div style={{ fontSize: 14, color: '#a0aec0', marginTop: 8, fontFamily: "'Inter', sans-serif" }}>
           Señales de Compra/Venta
         </div>
       </div>
+
+      {/* Vignette effect for cinema look */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%)',
+          pointerEvents: 'none',
+          zIndex: 5,
+        }}
+      />
     </AbsoluteFill>
   );
 };

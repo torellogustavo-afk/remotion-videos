@@ -5,7 +5,7 @@ interface ChartsSceneVerticalProps {
   frameProgress: number;
 }
 
-const AnimatedChartVertical: React.FC<{ frameProgress: number }> = ({ frameProgress }) => {
+const AnimatedChartVertical: React.FC<{ frameProgress: number; glowIntensity: number }> = ({ frameProgress, glowIntensity }) => {
   const generateChartPath = (progress: number) => {
     const points = [];
     const steps = 60;
@@ -42,6 +42,13 @@ const AnimatedChartVertical: React.FC<{ frameProgress: number }> = ({ frameProgr
             <stop offset="0%" stopColor="#00b8ff" stopOpacity={fillOpacity} />
             <stop offset="100%" stopColor="#00b8ff" stopOpacity="0" />
           </linearGradient>
+          <filter id="chartGlowVertical">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
 
         {/* Grid lines */}
@@ -63,6 +70,7 @@ const AnimatedChartVertical: React.FC<{ frameProgress: number }> = ({ frameProgr
           opacity={lineOpacity}
           strokeLinecap="round"
           strokeLinejoin="round"
+          filter="url(#chartGlowVertical)"
         />
 
         {/* Candlestick representation */}
@@ -101,6 +109,19 @@ export const ChartsSceneVertical: React.FC<ChartsSceneVerticalProps> = ({ frameP
   const fadeOut = interpolate(frameProgress, [0.9, 1], [1, 0], { easing: Easing.in(Easing.quad) });
   const percentageOpacity = interpolate(frameProgress, [0.65, 0.8], [0, 1], { easing: Easing.out(Easing.quad) });
 
+  // Cinematic zoom effect on background
+  const bgZoom = interpolate(frameProgress, [0, 1], [1, 1.05], {
+    easing: Easing.linear,
+  });
+
+  // Glow intensity pulse
+  const glowIntensity = interpolate(
+    frameProgress,
+    [0, 0.3, 0.7, 1],
+    [0, 1, 1, 0.5],
+    { easing: Easing.inOut(Easing.quad) }
+  );
+
   return (
     <AbsoluteFill
       style={{
@@ -110,8 +131,40 @@ export const ChartsSceneVertical: React.FC<ChartsSceneVerticalProps> = ({ frameP
         opacity: fadeOut,
         flexDirection: 'column',
         padding: '40px',
+        overflow: 'hidden',
       }}
     >
+      {/* Animated gradient background elements */}
+      <div
+        style={{
+          position: 'absolute',
+          width: 400,
+          height: 400,
+          background: 'radial-gradient(circle, rgba(0,184,255,0.15) 0%, transparent 70%)',
+          borderRadius: '50%',
+          top: '20%',
+          right: '-10%',
+          filter: `blur(60px)`,
+          transform: `scale(${bgZoom})`,
+          opacity: glowIntensity * 0.6,
+        }}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          width: 500,
+          height: 500,
+          background: 'radial-gradient(circle, rgba(0,255,150,0.08) 0%, transparent 70%)',
+          borderRadius: '50%',
+          bottom: '-10%',
+          left: '-15%',
+          filter: `blur(80px)`,
+          transform: `scale(${bgZoom})`,
+          opacity: glowIntensity * 0.4,
+        }}
+      />
+
       <div
         style={{
           opacity: contentOpacity,
@@ -120,7 +173,7 @@ export const ChartsSceneVertical: React.FC<ChartsSceneVerticalProps> = ({ frameP
           textAlign: 'center',
         }}
       >
-        <div style={{ fontSize: 36, fontWeight: 700, color: 'white', fontFamily: "'Inter', sans-serif", marginBottom: 8 }}>
+        <div style={{ fontSize: 36, fontWeight: 700, color: 'white', fontFamily: "'Inter', sans-serif", marginBottom: 8, textShadow: `0 0 20px rgba(0, 184, 255, ${glowIntensity * 0.3})` }}>
           Gráficos Avanzados
         </div>
         <div style={{ fontSize: 14, color: '#a0aec0', fontFamily: "'Inter', sans-serif" }}>
@@ -129,7 +182,7 @@ export const ChartsSceneVertical: React.FC<ChartsSceneVerticalProps> = ({ frameP
       </div>
 
       <div style={{ position: 'relative', width: '100%', height: 240 }}>
-        <AnimatedChartVertical frameProgress={frameProgress} />
+        <AnimatedChartVertical frameProgress={frameProgress} glowIntensity={glowIntensity} />
       </div>
 
       <div
@@ -140,13 +193,27 @@ export const ChartsSceneVertical: React.FC<ChartsSceneVerticalProps> = ({ frameP
           marginTop: 20,
         }}
       >
-        <div style={{ fontSize: 28, fontWeight: 700, color: '#00ff96', fontFamily: "'Inter', sans-serif" }}>
+        <div style={{ fontSize: 28, fontWeight: 700, color: '#00ff96', fontFamily: "'Inter', sans-serif", textShadow: `0 0 20px rgba(0, 255, 150, ${glowIntensity * 0.3})` }}>
           +2.85%
         </div>
         <div style={{ fontSize: 12, color: '#a0aec0', marginTop: 4, fontFamily: "'Inter', sans-serif" }}>
           Señales Precisas
         </div>
       </div>
+
+      {/* Vignette effect for cinema look */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%)',
+          pointerEvents: 'none',
+          zIndex: 5,
+        }}
+      />
     </AbsoluteFill>
   );
 };

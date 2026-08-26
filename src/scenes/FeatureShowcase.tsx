@@ -12,7 +12,8 @@ const FeatureCard: React.FC<{
   delay: number;
   frameProgress: number;
   position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-}> = ({ icon, title, description, delay, frameProgress, position }) => {
+  glowIntensity: number;
+}> = ({ icon, title, description, delay, frameProgress, position, glowIntensity }) => {
   const adjustedProgress = Math.max(0, frameProgress - delay);
   // Slower entrance: 0.3s to appear, stays visible, slower exit
   const opacity = interpolate(adjustedProgress, [0, 0.3, 0.8, 1], [0, 1, 1, 0], { easing: Easing.out(Easing.quad) });
@@ -40,10 +41,11 @@ const FeatureCard: React.FC<{
         transform: `scale(${scale})`,
         backdropFilter: 'blur(10px)',
         zIndex: 10,
+        boxShadow: `0 0 30px rgba(0, 184, 255, ${glowIntensity * 0.2})`,
       }}
     >
       <div style={{ fontSize: 40, marginBottom: 16 }}>{icon}</div>
-      <div style={{ fontSize: 22, fontWeight: 700, color: '#00b8ff', marginBottom: 12, fontFamily: "'Inter', sans-serif" }}>
+      <div style={{ fontSize: 22, fontWeight: 700, color: '#00b8ff', marginBottom: 12, fontFamily: "'Inter', sans-serif", textShadow: `0 0 10px rgba(0, 184, 255, ${glowIntensity * 0.3})` }}>
         {title}
       </div>
       <div style={{ fontSize: 14, color: '#a0aec0', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>
@@ -60,6 +62,19 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
   // Title entrance
   const titleOpacity = interpolate(frameProgress, [0, 0.15], [0, 1], { easing: Easing.out(Easing.quad) });
 
+  // Cinematic zoom effect on background
+  const bgZoom = interpolate(frameProgress, [0, 1], [1, 1.05], {
+    easing: Easing.linear,
+  });
+
+  // Glow intensity pulse
+  const glowIntensity = interpolate(
+    frameProgress,
+    [0, 0.3, 0.7, 1],
+    [0, 1, 1, 0.5],
+    { easing: Easing.inOut(Easing.quad) }
+  );
+
   return (
     <AbsoluteFill
       style={{
@@ -67,8 +82,40 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
         justifyContent: 'center',
         alignItems: 'center',
         opacity: fadeOut,
+        overflow: 'hidden',
       }}
     >
+      {/* Animated gradient background elements */}
+      <div
+        style={{
+          position: 'absolute',
+          width: 600,
+          height: 600,
+          background: 'radial-gradient(circle, rgba(0,184,255,0.15) 0%, transparent 70%)',
+          borderRadius: '50%',
+          top: '30%',
+          right: '-10%',
+          filter: `blur(60px)`,
+          transform: `scale(${bgZoom})`,
+          opacity: glowIntensity * 0.5,
+        }}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          width: 800,
+          height: 800,
+          background: 'radial-gradient(circle, rgba(0,255,150,0.08) 0%, transparent 70%)',
+          borderRadius: '50%',
+          bottom: '-15%',
+          left: '-10%',
+          filter: `blur(80px)`,
+          transform: `scale(${bgZoom})`,
+          opacity: glowIntensity * 0.4,
+        }}
+      />
+
       {/* Center title */}
       <div
         style={{
@@ -81,7 +128,7 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
           opacity: titleOpacity,
         }}
       >
-        <h2 style={{ fontSize: 52, fontWeight: 900, color: 'white', margin: 0, fontFamily: "'Inter', sans-serif" }}>
+        <h2 style={{ fontSize: 52, fontWeight: 900, color: 'white', margin: 0, fontFamily: "'Inter', sans-serif", textShadow: `0 0 20px rgba(0, 184, 255, ${glowIntensity * 0.3})` }}>
           Herramientas Profesionales
         </h2>
         <p style={{ fontSize: 18, color: '#a0aec0', marginTop: 16, fontFamily: "'Inter', sans-serif" }}>
@@ -97,6 +144,7 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
         delay={0.15}
         frameProgress={frameProgress}
         position="top-left"
+        glowIntensity={glowIntensity}
       />
 
       <FeatureCard
@@ -106,6 +154,7 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
         delay={0.35}
         frameProgress={frameProgress}
         position="top-right"
+        glowIntensity={glowIntensity}
       />
 
       <FeatureCard
@@ -115,6 +164,7 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
         delay={0.55}
         frameProgress={frameProgress}
         position="bottom-left"
+        glowIntensity={glowIntensity}
       />
 
       <FeatureCard
@@ -124,6 +174,21 @@ export const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ frameProgress 
         delay={0.75}
         frameProgress={frameProgress}
         position="bottom-right"
+        glowIntensity={glowIntensity}
+      />
+
+      {/* Vignette effect for cinema look */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%)',
+          pointerEvents: 'none',
+          zIndex: 5,
+        }}
       />
     </AbsoluteFill>
   );

@@ -25,6 +25,19 @@ export const CTASceneVertical: React.FC<CTASceneVerticalProps> = ({ frameProgres
     { easing: Easing.linear }
   );
 
+  // Cinematic zoom effect on background
+  const bgZoom = interpolate(frameProgress, [0, 1], [1, 1.05], {
+    easing: Easing.linear,
+  });
+
+  // Glow intensity pulse
+  const glowIntensity = interpolate(
+    frameProgress,
+    [0, 0.3, 0.7, 1],
+    [0, 1, 1, 0.5],
+    { easing: Easing.inOut(Easing.quad) }
+  );
+
   return (
     <AbsoluteFill
       style={{
@@ -34,9 +47,41 @@ export const CTASceneVertical: React.FC<CTASceneVerticalProps> = ({ frameProgres
         opacity: mainOpacity,
         flexDirection: 'column',
         padding: '40px 20px',
+        overflow: 'hidden',
       }}
     >
-      {/* Animated background elements */}
+      {/* Animated gradient background elements */}
+      <div
+        style={{
+          position: 'absolute',
+          width: 400,
+          height: 400,
+          background: 'radial-gradient(circle, rgba(0,184,255,0.15) 0%, transparent 70%)',
+          borderRadius: '50%',
+          top: '20%',
+          right: '-10%',
+          filter: `blur(60px)`,
+          transform: `scale(${bgZoom})`,
+          opacity: glowIntensity * 0.6,
+        }}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          width: 500,
+          height: 500,
+          background: 'radial-gradient(circle, rgba(0,255,150,0.08) 0%, transparent 70%)',
+          borderRadius: '50%',
+          bottom: '-20%',
+          left: '-15%',
+          filter: `blur(80px)`,
+          transform: `scale(${bgZoom})`,
+          opacity: glowIntensity * 0.4,
+        }}
+      />
+
+      {/* Animated background elements - pulse at center */}
       <div
         style={{
           position: 'absolute',
@@ -73,6 +118,7 @@ export const CTASceneVertical: React.FC<CTASceneVerticalProps> = ({ frameProgres
             fontFamily: "'Inter', sans-serif",
             lineHeight: 1.1,
             opacity: titleOpacity,
+            textShadow: `0 0 30px rgba(0, 184, 255, ${glowIntensity * 0.4}), 0 0 60px rgba(0, 255, 150, ${glowIntensity * 0.2})`,
           }}
         >
           5 Millones de<br />
@@ -80,7 +126,8 @@ export const CTASceneVertical: React.FC<CTASceneVerticalProps> = ({ frameProgres
             background: 'linear-gradient(90deg, #00b8ff 0%, #00ff96 100%)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
+            WebkitTextFillColor: 'transparent',
+            filter: `drop-shadow(0 0 20px rgba(0, 184, 255, ${glowIntensity * 0.3}))`
           }}>
             Traders Operando
           </span>
@@ -96,6 +143,7 @@ export const CTASceneVertical: React.FC<CTASceneVerticalProps> = ({ frameProgres
             fontWeight: 300,
             lineHeight: 1.5,
             opacity: subtitleOpacity,
+            textShadow: `0 0 10px rgba(0, 184, 255, ${glowIntensity * 0.2})`,
           }}
         >
           ¿Por qué esperar?<br />
@@ -121,7 +169,7 @@ export const CTASceneVertical: React.FC<CTASceneVerticalProps> = ({ frameProgres
               borderRadius: 10,
               cursor: 'pointer',
               fontFamily: "'Inter', sans-serif",
-              boxShadow: '0 0 30px rgba(0, 184, 255, 0.3), 0 0 60px rgba(0, 255, 150, 0.2)',
+              boxShadow: `0 0 30px rgba(0, 184, 255, ${0.3 + glowIntensity * 0.3}), 0 0 60px rgba(0, 255, 150, ${0.2 + glowIntensity * 0.2})`,
               textTransform: 'uppercase',
               letterSpacing: '1px',
               transition: 'all 0.3s ease',
@@ -157,6 +205,20 @@ export const CTASceneVertical: React.FC<CTASceneVerticalProps> = ({ frameProgres
           </div>
         </div>
       </div>
+
+      {/* Vignette effect for cinema look */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%)',
+          pointerEvents: 'none',
+          zIndex: 5,
+        }}
+      />
 
       <style>{`
         @keyframes pulse {
